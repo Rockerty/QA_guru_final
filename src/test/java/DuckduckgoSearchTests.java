@@ -15,7 +15,7 @@ public class DuckduckgoSearchTests {
         $("[name=q]").shouldBe(visible).click();
         //sleep(500);
         $("[name=q]").setValue("selenide");
-        //sleep(1000);
+        //sleep(2000);
         $("[name=q]").pressEnter();
         $("[data-testid=result]").shouldHave(text("selenide.org"));
     }
