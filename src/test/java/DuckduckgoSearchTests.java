@@ -15,7 +15,7 @@ public class DuckduckgoSearchTests {
         // Медленно вводим текст
         $("[name=q]").shouldBe(visible).click();
         //sleep(5000);
-        sleep(5000);
+        sleep(7000);
         sleep(5000);
         $("[name=q]").setValue("selenide");
         //sleep(2000);
