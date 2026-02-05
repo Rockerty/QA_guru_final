@@ -4,13 +4,14 @@ import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
+import static com.codeborne.selenide.Selenide.sleep;
 
 public class DuckduckgoSearchTests {
     @Test
     void successfulSearchTest() {
         open("https://duckduckgo.com");
         // Пауза для "чтения" страницы
-        //sleep(2000);
+        sleep(2000);
         // Медленно вводим текст
         $("[name=q]").shouldBe(visible).click();
         //sleep(500);
