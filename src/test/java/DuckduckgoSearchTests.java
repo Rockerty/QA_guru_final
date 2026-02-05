@@ -16,7 +16,6 @@ public class DuckduckgoSearchTests {
         $("[name=q]").shouldBe(visible).click();
         sleep(2000);
         sleep(5000);
-        sleep(4000);
         $("[name=q]").setValue("selenide");
         //sleep(2000);
         $("[name=q]").pressEnter();
