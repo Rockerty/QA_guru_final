@@ -1,0 +1,11 @@
+# Выбери тип ветки:
+# feature/  - новая функциональность
+# bugfix/   - исправление ошибки
+# hotfix/   - срочное исправление
+# refactor/ - рефакторинг
+# test/     - добавление тестов
+# docs/     - документация
+# chore/    - технические задачи
+
+# Пример: feature/JIRA-123/add-new-test
+<type>/<ticket>/<short-description>
