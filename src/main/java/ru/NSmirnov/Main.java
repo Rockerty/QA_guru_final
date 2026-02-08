@@ -4,14 +4,16 @@ package ru.NSmirnov;
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+        String toBePrint = "Hello Culture!";
+        int myInt = 4;
+        double myDouble = 1.5;
+        char myChar = 'c';
+        boolean myBoolean = true;
+        String name = "Nick";
+        int age = 37;
+        //boolean result = 3 < 5;
+        boolean result = name.equals("Nicks") && age == 37;
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i = " + i);
-        }
+        System.out.println(result);
     }
 }
