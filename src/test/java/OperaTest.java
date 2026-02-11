@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.openqa.selenium.chrome.ChromeOptions;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
+import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.*;
 
 public class OperaTest {
@@ -20,6 +21,7 @@ public class OperaTest {
     @Test
     void testOpera() {
         open("https://app.qa.guru/automation-practice-form/");
+        $x("//*[@data-testid='ClearIcon']").shouldBe(visible).click();
         $x("//input[@data-testid='firstName']").setValue("Николай");
         $x("//input[@data-testid='lastName']").setValue("Смирнов");
         $x("//input[@data-testid='email']").setValue("smirnov@mail.ru");
