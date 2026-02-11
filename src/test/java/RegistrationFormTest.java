@@ -1,3 +1,4 @@
+import com.codeborne.selenide.Configuration;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
@@ -9,15 +10,13 @@ import static com.codeborne.selenide.Selenide.*;
 
 import java.io.File;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 public class RegistrationFormTest {
 
     @BeforeAll
     static void beforeAll() {
-        LocalDate yesterday = LocalDate.now().minusDays(1);
-        int dayOfMonth = yesterday.getDayOfMonth();
-        System.out.println(dayOfMonth);
+        System.out.println("beforeAll");
+        Configuration.timeout = 10000;
     }
     @Test
     void successfulRegistration() {
@@ -30,10 +29,6 @@ public class RegistrationFormTest {
         $x("//input[@data-testid='lastName']").setValue("Smirnov");
         $x("//input[@data-testid='email']").setValue("smirnovsmirnov@mail.ru");
         $x("//input[@data-testid='phone']").setValue("999 999 9999");
-        //$(By.xpath("//input[@data-testid='phone']")).click();
-        //$(By.xpath("//input[@data-testid='phone']")).sendKeys("9");
-        //$x("//input[@data-testid='phone']").setValue("9");
-
         $x("//*[contains(text(), 'Language')]/following::*[@role='combobox'][1]").shouldBe(visible).click();
         //$x("//*[@data-testid='language']").click();
         $x("//*[@data-value='Russian']").shouldBe(visible).click();
@@ -73,7 +68,63 @@ public class RegistrationFormTest {
         $(By.xpath("//p[text()='gender']/following::p[1]")).shouldHave(text("Male"));
         $(By.xpath("//p[text()='phone']/following::p[1]")).shouldHave(text("999 999 9999"));
         $(By.xpath("//p[text()='address']/following::p[1]")).shouldHave(text("My lovely address"));
+    }
 
+    @Test
+    void requiredFieldsErrorTest() {
+        open("https://app.qa.guru/automation-practice-form/");
+        $x("//*[@data-testid='ClearIcon']").shouldBe(visible).click();
+        $x("//button[@type='submit']").scrollTo().click();
+        $(By.xpath("//form")).shouldHave(text("First Name is required"));
+        $(By.xpath("//form")).shouldHave(text("Last Name is required"));
+        $(By.xpath("//form")).shouldHave(text("E-mail is required"));
+        $(By.xpath("//form")).shouldHave(text("Phone number is required"));
+        $(By.xpath("//form")).shouldHave(text("Gender is required"));
+    }
 
+    @Test
+    void shortEmailTest() {
+        open("https://app.qa.guru/automation-practice-form/");
+        $x("//*[@data-testid='ClearIcon']").shouldBe(visible).click();
+        $x("//input[@data-testid='email']").setValue("sm@mail.ru");
+        $x("//button[@type='submit']").scrollTo().click();
+        $(By.xpath("//form")).shouldHave(text("E-mail must be at least 10 symbols long"));
+    }
+
+    @Test
+    void invalidFileExtensionTest() {
+        open("https://app.qa.guru/automation-practice-form/");
+        $x("//*[@data-testid='ClearIcon']").shouldBe(visible).click();
+        $(By.xpath("//input[@type='file']")).uploadFile(new File("C:\\Users\\nsmirnov.IT-ONE\\Downloads\\VanyaVPN.exe"));
+        $x("//button[@type='submit']").scrollTo().click();
+        $(By.xpath("//form")).shouldHave(text("Upload failed"));
+        $(By.xpath("//form")).shouldHave(text("Invalid extension"));
+    }
+
+    @Test
+    void invalidEmailTest() {
+        open("https://app.qa.guru/automation-practice-form/");
+        $x("//*[@data-testid='ClearIcon']").shouldBe(visible).click();
+        $x("//input[@data-testid='email']").setValue("smirnovsmir");
+        $x("//button[@type='submit']").scrollTo().click();
+        $(By.xpath("//form")).shouldHave(text("E-mail is invalid"));
+    }
+
+    @Test
+    void requiredFieldsOnlyTest() {
+        open("https://app.qa.guru/automation-practice-form/");
+        $x("//*[@data-testid='ClearIcon']").shouldBe(visible).click();
+        $x("//input[@data-testid='firstName']").setValue("Monica");
+        $x("//input[@data-testid='lastName']").setValue("Smith");
+        $x("//input[@data-testid='email']").setValue("MonicaSmith@mail.ru");
+        $x("//input[@data-testid='phone']").setValue("999 999 9999");
+        $x("//input[@data-testid='gender' and @value='Female']").scrollTo().click();
+        $x("//button[@type='submit']").scrollTo().click();
+        // Проверки
+        $(By.xpath("//p[text()='firstName']/following::p[1]")).scrollTo().shouldBe(visible).shouldHave(text("Monica"));
+        $(By.xpath("//p[text()='lastName']/following::p[1]")).shouldHave(text("Smith"));
+        $(By.xpath("//p[text()='email']/following::p[1]")).shouldHave(text("MonicaSmith@mail.ru"));
+        $(By.xpath("//p[text()='phone']/following::p[1]")).shouldHave(text("999 999 9999"));
+        $(By.xpath("//p[text()='gender']/following::p[1]")).shouldHave(text("Female"));
     }
 }
