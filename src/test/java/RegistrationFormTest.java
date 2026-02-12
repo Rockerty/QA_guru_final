@@ -27,7 +27,7 @@ public class RegistrationFormTest {
         $x("//*[@data-testid='ClearIcon']").shouldBe(visible).click();
         $x("//input[@data-testid='firstName']").setValue("Nick");
         $x("//input[@data-testid='lastName']").setValue("Smirnov");
-        $x("//input[@data-testid='email']").setValue("smirnovsmirnov@mail.ru");
+        $x("//input[@data-testid='email']").setValue("smirnov@mail.ru");
         $x("//input[@data-testid='phone']").setValue("999 999 9999");
         $x("//*[contains(text(), 'Language')]/following::*[@role='combobox'][1]").shouldBe(visible).click();
         //$x("//*[@data-testid='language']").click();
@@ -59,7 +59,7 @@ public class RegistrationFormTest {
                 .perform();
         $(By.xpath("//textarea[@data-testid='address']")).setValue("My lovely address");
         // Загрузка файла
-        $(By.xpath("//input[@type='file']")).uploadFile(new File("C:\\Users\\nsmirnov.IT-ONE\\Downloads\\Telegram Desktop\\Little poito art.png"));
+        $(By.xpath("//input[@type='file']")).uploadFile(new File("src/test/resources/Little poito art.png"));
         $x("//button[@type='submit']").scrollTo().click();
         // Проверки
         $(By.xpath("//p[text()='firstName']/following::p[1]")).scrollTo().shouldBe(visible).shouldHave(text("Nick"));

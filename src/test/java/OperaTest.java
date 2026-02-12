@@ -16,6 +16,7 @@ public class OperaTest {
         ChromeOptions options = new ChromeOptions();
         options.setBinary("C:\\Users\\nsmirnov.IT-ONE\\AppData\\Local\\Programs\\Opera\\opera.exe");
         Configuration.browserCapabilities = options;
+        //Configuration.browser = "opera";
     }
 
     @Test
