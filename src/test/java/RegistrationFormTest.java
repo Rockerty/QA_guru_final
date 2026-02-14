@@ -33,9 +33,8 @@ public class RegistrationFormTest {
         $x("//input[@data-testid='email']").setValue("smirnov@mail.ru");
         $x("//input[@data-testid='phone']").setValue("999 999 9999");
         $x("//*[contains(text(), 'Language')]/following::*[@role='combobox'][1]").shouldBe(visible).click();
-        //$x("//*[@data-testid='language']").click();
         $x("//*[@data-value='Russian']").shouldBe(visible).click();
-        // Выбор даты
+        // Выбор даты рождения
         $x("//*[@data-testid='CalendarIcon']").scrollTo().shouldBe(visible).click();
         // Год
         $x("//*[contains(@class, 'MuiPickersCalendarHeader-switchViewButton')]").shouldBe(visible).click();
@@ -44,27 +43,21 @@ public class RegistrationFormTest {
         $x("//button[text()='Feb']").scrollTo().shouldBe(visible).click();
         // День
         $x("//button[text()='3']").scrollTo().shouldBe(visible).click();
-
-
-
-
-        $x("//*[@data-testid='CalendarIcon']").scrollTo().shouldBe(visible).click();
-        $x("//button[@role='gridcell' and text()='" + dayOfMonth + "']").shouldBe(visible).click();
+        //$x("//button[@role='gridcell' and text()='" + dayOfMonth + "']").shouldBe(visible).click();
+        // Выбоа пола
         $x("//input[@data-testid='gender' and @value='Male']").click();
-
-
         // Выбор хобби
         $x("//input[@value='Sports' and @data-testid='hobbies']").click();
         $x("//input[@value='Reading' and @data-testid='hobbies']").click();
         $x("//input[@value='Music' and @data-testid='hobbies']").click();
         // Выбор предметов
-        $x("//*[contains(text(), 'Subject')]/following::*[@role='combobox'][1]").click();
+        $x("//*[contains(text(), 'Subject')]/following::*[@role='combobox'][1]").scrollTo().click();
         $x("//*[@role='listbox']//*[@data-value='Maths']").shouldBe(visible).click();
         $x("//*[@role='listbox']//*[@data-value='Arts']").shouldBe(visible).click();
         $x("//*[@role='listbox']//*[@data-value='Dance']").shouldBe(visible).click();
         $x("//*[@role='listbox']//*[@data-value='Physical']").shouldBe(visible).click();
         actions().sendKeys(Keys.ESCAPE).perform();
-
+        // Выбор страны, города, адреса
         $x("//*[contains(text(), 'State')]/following::*[@role='combobox'][1]").click();
         $x("//*[@data-value='California']").shouldBe(visible).click();
         $(By.id("city-select")).selectOption("San Francisco");
@@ -84,6 +77,17 @@ public class RegistrationFormTest {
         $(By.xpath("//p[text()='email']/following::p[1]")).shouldHave(text("smirnov@mail.ru"));
         $(By.xpath("//p[text()='gender']/following::p[1]")).shouldHave(text("Male"));
         $(By.xpath("//p[text()='phone']/following::p[1]")).shouldHave(text("999 999 9999"));
+        $(By.xpath("//p[text()='dateOfBirth']/following::p[1]")).shouldHave(text("03/02/2022"));
+        $(By.xpath("//p[text()='subjects']/following::p[1]")).shouldHave(text("Maths"));
+        $(By.xpath("//p[text()='subjects']/following::p[1]")).shouldHave(text("Arts"));
+        $(By.xpath("//p[text()='subjects']/following::p[1]")).shouldHave(text("Dance"));
+        $(By.xpath("//p[text()='subjects']/following::p[1]")).shouldHave(text("Physical"));
+        $(By.xpath("//p[text()='hobbies']/following::p[1]")).shouldHave(text("Sports"));
+        $(By.xpath("//p[text()='hobbies']/following::p[1]")).shouldHave(text("Reading"));
+        $(By.xpath("//p[text()='hobbies']/following::p[1]")).shouldHave(text("Music"));
+        $(By.xpath("//p[text()='stateCity']/following::p[1]")).shouldHave(text("California"));
+        $(By.xpath("//p[text()='stateCity']/following::p[1]")).shouldHave(text("San Francisco"));
+        $(By.xpath("//p[text()='language']/following::p[1]")).shouldHave(text("Russian"));
         $(By.xpath("//p[text()='address']/following::p[1]")).shouldHave(text("My lovely address"));
     }
 
