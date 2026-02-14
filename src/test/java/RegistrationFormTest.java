@@ -13,17 +13,20 @@ import java.time.LocalDate;
 
 public class RegistrationFormTest {
 
+    String baseUrl = "https://app.qa.guru/";
+
     @BeforeAll
     static void beforeAll() {
         System.out.println("beforeAll");
         Configuration.timeout = 10000;
+
     }
     @Test
-    void successfulRegistration() {
+    void successfulRegistrationTest() {
         LocalDate yesterday = LocalDate.now().minusDays(1);
         int dayOfMonth = yesterday.getDayOfMonth();
 
-        open("https://app.qa.guru/automation-practice-form/");
+        open(baseUrl + "automation-practice-form/");
         $x("//*[@data-testid='ClearIcon']").shouldBe(visible).click();
         $x("//input[@data-testid='firstName']").setValue("Nick");
         $x("//input[@data-testid='lastName']").setValue("Smirnov");
@@ -32,10 +35,24 @@ public class RegistrationFormTest {
         $x("//*[contains(text(), 'Language')]/following::*[@role='combobox'][1]").shouldBe(visible).click();
         //$x("//*[@data-testid='language']").click();
         $x("//*[@data-value='Russian']").shouldBe(visible).click();
-        // Клик по вчерашней дате
+        // Выбор даты
+        $x("//*[@data-testid='CalendarIcon']").scrollTo().shouldBe(visible).click();
+        // Год
+        $x("//*[contains(@class, 'MuiPickersCalendarHeader-switchViewButton')]").shouldBe(visible).click();
+        $x("//button[text()='2022']").scrollTo().shouldBe(visible).click();
+        // Месяц
+        $x("//button[text()='Feb']").scrollTo().shouldBe(visible).click();
+        // День
+        $x("//button[text()='3']").scrollTo().shouldBe(visible).click();
+
+
+
+
         $x("//*[@data-testid='CalendarIcon']").scrollTo().shouldBe(visible).click();
         $x("//button[@role='gridcell' and text()='" + dayOfMonth + "']").shouldBe(visible).click();
         $x("//input[@data-testid='gender' and @value='Male']").click();
+
+
         // Выбор хобби
         $x("//input[@value='Sports' and @data-testid='hobbies']").click();
         $x("//input[@value='Reading' and @data-testid='hobbies']").click();
@@ -59,7 +76,7 @@ public class RegistrationFormTest {
                 .perform();
         $(By.xpath("//textarea[@data-testid='address']")).setValue("My lovely address");
         // Загрузка файла
-        $(By.xpath("//input[@type='file']")).uploadFile(new File("src/test/resources/Little poito art.png"));
+        $(By.xpath("//input[@type='file']")).uploadFromClasspath("Little poito art.png");
         $x("//button[@type='submit']").scrollTo().click();
         // Проверки
         $(By.xpath("//p[text()='firstName']/following::p[1]")).scrollTo().shouldBe(visible).shouldHave(text("Nick"));
@@ -72,7 +89,7 @@ public class RegistrationFormTest {
 
     @Test
     void requiredFieldsErrorTest() {
-        open("https://app.qa.guru/automation-practice-form/");
+        open(baseUrl + "automation-practice-form/");
         $x("//*[@data-testid='ClearIcon']").shouldBe(visible).click();
         $x("//button[@type='submit']").scrollTo().click();
         $(By.xpath("//form")).shouldHave(text("First Name is required"));
@@ -84,7 +101,7 @@ public class RegistrationFormTest {
 
     @Test
     void shortEmailTest() {
-        open("https://app.qa.guru/automation-practice-form/");
+        open(baseUrl + "automation-practice-form/");
         $x("//*[@data-testid='ClearIcon']").shouldBe(visible).click();
         $x("//input[@data-testid='email']").setValue("sm@mail.ru");
         $x("//button[@type='submit']").scrollTo().click();
@@ -93,9 +110,9 @@ public class RegistrationFormTest {
 
     @Test
     void invalidFileExtensionTest() {
-        open("https://app.qa.guru/automation-practice-form/");
+        open(baseUrl + "automation-practice-form/");
         $x("//*[@data-testid='ClearIcon']").shouldBe(visible).click();
-        $(By.xpath("//input[@type='file']")).uploadFile(new File("C:\\Users\\nsmirnov.IT-ONE\\Downloads\\VanyaVPN.exe"));
+        $(By.xpath("//input[@type='file']")).uploadFromClasspath("VanyaVPN.exe");
         $x("//button[@type='submit']").scrollTo().click();
         $(By.xpath("//form")).shouldHave(text("Upload failed"));
         $(By.xpath("//form")).shouldHave(text("Invalid extension"));
@@ -103,7 +120,7 @@ public class RegistrationFormTest {
 
     @Test
     void invalidEmailTest() {
-        open("https://app.qa.guru/automation-practice-form/");
+        open(baseUrl + "automation-practice-form/");
         $x("//*[@data-testid='ClearIcon']").shouldBe(visible).click();
         $x("//input[@data-testid='email']").setValue("smirnovsmir");
         $x("//button[@type='submit']").scrollTo().click();
@@ -112,7 +129,7 @@ public class RegistrationFormTest {
 
     @Test
     void requiredFieldsOnlyTest() {
-        open("https://app.qa.guru/automation-practice-form/");
+        open(baseUrl + "automation-practice-form/");
         $x("//*[@data-testid='ClearIcon']").shouldBe(visible).click();
         $x("//input[@data-testid='firstName']").setValue("Monica");
         $x("//input[@data-testid='lastName']").setValue("Smith");
