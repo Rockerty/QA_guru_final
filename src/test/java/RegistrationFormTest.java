@@ -8,25 +8,17 @@ import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.*;
 
-import java.io.File;
-import java.time.LocalDate;
-
 public class RegistrationFormTest {
 
-    String baseUrl = "https://app.qa.guru/";
-
     @BeforeAll
-    static void beforeAll() {
+    static void setUp() {
         System.out.println("beforeAll");
         Configuration.timeout = 10000;
-
+        Configuration.baseUrl = "https://app.qa.guru/";
     }
     @Test
     void successfulRegistrationTest() {
-        LocalDate yesterday = LocalDate.now().minusDays(1);
-        int dayOfMonth = yesterday.getDayOfMonth();
-
-        open(baseUrl + "automation-practice-form/");
+        open("automation-practice-form/");
         $x("//*[@data-testid='ClearIcon']").shouldBe(visible).click();
         $x("//input[@data-testid='firstName']").setValue("Nick");
         $x("//input[@data-testid='lastName']").setValue("Smirnov");
@@ -93,7 +85,7 @@ public class RegistrationFormTest {
 
     @Test
     void requiredFieldsErrorTest() {
-        open(baseUrl + "automation-practice-form/");
+        open("automation-practice-form/");
         $x("//*[@data-testid='ClearIcon']").shouldBe(visible).click();
         $x("//button[@type='submit']").scrollTo().click();
         $(By.xpath("//form")).shouldHave(text("First Name is required"));
@@ -105,7 +97,7 @@ public class RegistrationFormTest {
 
     @Test
     void shortEmailTest() {
-        open(baseUrl + "automation-practice-form/");
+        open("automation-practice-form/");
         $x("//*[@data-testid='ClearIcon']").shouldBe(visible).click();
         $x("//input[@data-testid='email']").setValue("sm@mail.ru");
         $x("//button[@type='submit']").scrollTo().click();
@@ -114,7 +106,7 @@ public class RegistrationFormTest {
 
     @Test
     void invalidFileExtensionTest() {
-        open(baseUrl + "automation-practice-form/");
+        open("automation-practice-form/");
         $x("//*[@data-testid='ClearIcon']").shouldBe(visible).click();
         $(By.xpath("//input[@type='file']")).uploadFromClasspath("VanyaVPN.exe");
         $x("//button[@type='submit']").scrollTo().click();
@@ -124,7 +116,7 @@ public class RegistrationFormTest {
 
     @Test
     void invalidEmailTest() {
-        open(baseUrl + "automation-practice-form/");
+        open("automation-practice-form/");
         $x("//*[@data-testid='ClearIcon']").shouldBe(visible).click();
         $x("//input[@data-testid='email']").setValue("smirnovsmir");
         $x("//button[@type='submit']").scrollTo().click();
@@ -133,7 +125,7 @@ public class RegistrationFormTest {
 
     @Test
     void requiredFieldsOnlyTest() {
-        open(baseUrl + "automation-practice-form/");
+        open("automation-practice-form/");
         $x("//*[@data-testid='ClearIcon']").shouldBe(visible).click();
         $x("//input[@data-testid='firstName']").setValue("Monica");
         $x("//input[@data-testid='lastName']").setValue("Smith");
