@@ -1,5 +1,4 @@
 import com.codeborne.selenide.Configuration;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -11,7 +10,7 @@ import static com.codeborne.selenide.Selenide.*;
 public class OperaTest {
 
     @BeforeEach
-    void beforeEach() {
+    void setUp() {
         WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
         options.setBinary("C:\\Users\\nsmirnov.IT-ONE\\AppData\\Local\\Programs\\Opera\\opera.exe");
