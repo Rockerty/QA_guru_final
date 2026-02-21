@@ -10,22 +10,22 @@ import static com.codeborne.selenide.Selenide.*;
 
 public class RegistrationFormPage {
     //Elements
-    private SelenideElement submitButton = $x("//button[@type='submit']");
-    private DatePickerComponent datePicker = new DatePickerComponent();
+    private final SelenideElement submitButton = $x("//button[@type='submit']");
+    private final DatePickerComponent datePicker = new DatePickerComponent();
 
-    private static String inputFieldXpathTemplate = "//input[@data-testid='%s']";
-    private static String outputFieldTemplate = "//p[text()='%s']/following::p[1]";
-    private static String comboboxTemplate = "//*[contains(text(), '%s')]/following::*[@role='combobox'][1]";
-    private static String optionTemplate = "//*[@role='listbox']//*[contains(text(), '%s')]";
-    private static String dataValueTemplate = "//*[@data-value='%s']";
-    private static String genderXpathTemplate = "//input[@data-testid='gender' and @value='%s']";
-    private static String hobbyXpathTemplate = "//input[@data-testid='hobbies' and @value='%s']";
-    private static String citySelect = "city-select";
-    private static String textAreaXpathTemplate = "//textarea[@data-testid='%s']";
-    private static String sliderXpath = "//span[contains(@class, 'MuiSlider-thumb')]";
-    private static String uploadFileXpath = "//input[@type='file']";
-    private static String registrationFormXpath = "//form";
-    private static String advertisingMenuCloseButtonXpath = "//*[@data-testid='ClearIcon']";
+    private static final String inputFieldXpathTemplate = "//input[@data-testid='%s']";
+    private static final String outputFieldTemplate = "//p[text()='%s']/following::p[1]";
+    private static final String comboboxTemplate = "//*[contains(text(), '%s')]/following::*[@role='combobox'][1]";
+    private static final String optionTemplate = "//*[@role='listbox']//*[contains(text(), '%s')]";
+    private static final String dataValueTemplate = "//*[@data-value='%s']";
+    private static final String genderXpathTemplate = "//input[@data-testid='gender' and @value='%s']";
+    private static final String hobbyXpathTemplate = "//input[@data-testid='hobbies' and @value='%s']";
+    private static final String citySelect = "city-select";
+    private static final String textAreaXpathTemplate = "//textarea[@data-testid='%s']";
+    private static final String sliderXpath = "//span[contains(@class, 'MuiSlider-thumb')]";
+    private static final String uploadFileXpath = "//input[@type='file']";
+    private static final String registrationFormXpath = "//form";
+    private static final String advertisingMenuCloseButtonXpath = "//*[@data-testid='ClearIcon']";
 
     //Actions
     public void openPage(){
