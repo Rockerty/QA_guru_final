@@ -15,6 +15,7 @@ public class RegistrationFormTest {
     static void allTestsSetUp() {
         System.out.println("beforeAll");
         Configuration.timeout = 10000;
+        Configuration.browserSize = "1920x1080";
         Configuration.baseUrl = "https://app.qa.guru/";
     }
 
@@ -34,14 +35,17 @@ public class RegistrationFormTest {
         registrationFormPage.languageChoice(language);
         registrationFormPage.setBirthDate(birthYear, birthMonth, birthDay);
         registrationFormPage.genderChoice(gender);
+
         for (String hobby : hobbies) {
             registrationFormPage.hobbyChoice(hobby);
         }
+
         registrationFormPage.openCombobox("Subject");
         for (String subject : subjects) {
             registrationFormPage.selectOption(subject);
         }
         actions().sendKeys(Keys.ESCAPE).perform();
+
         registrationFormPage.openCombobox("State");
         registrationFormPage.stateChoice(state);
         registrationFormPage.cityChoice(city);

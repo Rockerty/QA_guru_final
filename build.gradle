@@ -15,6 +15,7 @@ dependencies {
     //testImplementation 'com.codeborne:selenide:7.9.4'
     testImplementation 'com.codeborne:selenide:7.14.0'
     testImplementation 'io.github.bonigarcia:webdrivermanager:5.9.2'
+    implementation 'com.github.javafaker:javafaker:1.0.2'
 
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
