@@ -1,8 +1,11 @@
 package testdata;
 
 import com.github.javafaker.Faker;
+import org.junit.jupiter.params.provider.Arguments;
+
 import java.util.*;
-import static utils.RandomUtils.*;
+import java.util.stream.Stream;
+
 import static testdata.TestDataHelper.formatPhoneNumber;
 import static testdata.TestDataHelper.getMonthNumber;
 
@@ -11,7 +14,14 @@ public class TestData {
 
     public static String firstName = fakerRu.name().firstName();
     public static String lastName = fakerRu.name().lastName();
-    public static String email = getRandomEmail(8);
+    //public static String email = fakerRu.internet().emailAddress();
+    private static String generateRandomEmail(int length) {
+        String part1 = fakerRu.regexify("[a-zA-Z0-9]{" + length + "}");
+        String part2 = fakerRu.regexify("[a-zA-Z0-9]{" + length + "}");
+        return part1 + "@" + part2 + ".com";
+    }
+    public static String email = generateRandomEmail(9);
+
 
     public static String phone = fakerRu.phoneNumber().subscriberNumber(10);
     public static String expectedPhone = formatPhoneNumber(phone);
@@ -64,4 +74,27 @@ public class TestData {
     public static String address = fakerRu.address().fullAddress();
     public static String shortIncorrectEmail = fakerRu.letterify("??@??.com", false);
     public static String incorrectFormatEmail = fakerRu.lorem().characters(8, false, false);
+
+    public static Stream<String> shortEmailTestWithSourceMethod() {
+        return Stream.of(
+                "a@test.com",
+                "parchi@mail.ru"
+        );
+    }
+
+    public static Stream<String> invalidEmailTestWithSourceMethod() {
+        return Stream.of(
+                "mail.ru",
+                "gmailcom",
+                "@mail.ru"
+
+        );
+    }
+
+    public static Stream<Arguments> errorMessageWithIncorrectEmailTest() {
+        return Stream.of(
+                Arguments.of("mail.ru", "E-mail is invalid"),
+                Arguments.of("a@mail.ru", "E-mail must be at least 10 symbols long")
+        );
+    }
 }

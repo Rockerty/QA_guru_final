@@ -21,5 +21,22 @@ dependencies {
 }
 
 test {
-    useJUnitPlatform()
+    useJUnitPlatform {
+    }
+}
+
+test {
+    useJUnitPlatform {
+        if (project.hasProperty("includeTag")) {
+            includeTags project.property("includeTag")
+        }
+    }
+
+    testLogging {
+        events "PASSED", "FAILED", "SKIPPED"
+        exceptionFormat "short"
+        showExceptions true
+        showCauses true
+        showStackTraces true
+    }
 }
