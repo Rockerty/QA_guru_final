@@ -1,5 +1,6 @@
 plugins {
     id 'java'
+    id('io.qameta.allure') version '3.0.2'
 }
 
 group = 'ru.NSmirnov'
@@ -7,6 +8,50 @@ version = '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
+}
+
+allure {
+    version.set("2.34.1")
+    adapter {
+        // Configure version for io.qameta.allure:allure-* adapters
+        // It defaults to allure.version
+        allureJavaVersion.set("2.29.1")
+        aspectjVersion.set("1.9.22.1")
+
+        // Customize environment variables for launching Allure
+        environment.put("JAVA_HOME", "/path/to/java_home")
+
+        autoconfigure.set(true)
+        autoconfigureListeners.set(true)
+        aspectjWeaver.set(true)
+
+        // By default, categories.json is detected in src/test/resources/../categories.json,
+        // However, it would be better to put the file in a well-known location and configure it explicitly
+        categoriesFile.set(layout.projectDirectory.file("config/allure/categories.json"))
+        frameworks {
+            junit5 {
+                // Defaults to allureJavaVersion
+                adapterVersion.set("2.19.0")
+                enabled.set(true)
+                // Enables allure-junit4 default test listeners via META-INF/services/...
+                autoconfigureListeners.set(true)
+            }
+            junit4 {
+                // same as junit5
+            }
+            testng {
+                // same as junit5
+            }
+            spock
+            cucumberJvm
+            // Alternative syntax: cucumberJvm(2) {...}
+            cucumber2Jvm
+            cucumber3Jvm
+            cucumber4Jvm
+            cucumber5Jvm
+            cucumber6Jvm
+        }
+    }
 }
 
 dependencies {
@@ -22,6 +67,7 @@ dependencies {
     testImplementation 'com.opencsv:opencsv:5.9'
     testImplementation "com.fasterxml.jackson.core:jackson-databind:2.13.1"
     testImplementation 'com.jayway.jsonpath:json-path:2.9.0'
+    testImplementation 'io.qameta.allure:allure-selenide:2.33.0'
 
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
