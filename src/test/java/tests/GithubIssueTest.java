@@ -27,6 +27,8 @@ public class GithubIssueTest {
 
     @Test
     public void issueSearchWithClearListenerTest() {
+        SelenideLogger.addListener("allure", new AllureSelenide());
+
         open("");
         $x("//*[@class='search-input']").click();
         $x("//*[@id='query-builder-test']").scrollTo().setValue("rockerty/qa_guru_final");
