@@ -22,6 +22,8 @@ public class RegistrationFormTest {
         Configuration.timeout = 10000;
         Configuration.browserSize = "1920x1080";
         Configuration.baseUrl = "https://app.qa.guru/";
+
+        Configuration.remote = "https://user1:1234@selenoid.autotests.cloud/wd/hub";
     }
 
     @BeforeEach
