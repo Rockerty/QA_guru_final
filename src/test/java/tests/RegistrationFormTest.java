@@ -24,6 +24,7 @@ public class RegistrationFormTest {
         Configuration.baseUrl = "https://app.qa.guru/";
 
         Configuration.remote = "https://user1:1234@selenoid.autotests.cloud/wd/hub";
+        Configuration.browserVersion = "128.0";
     }
 
     @BeforeEach
