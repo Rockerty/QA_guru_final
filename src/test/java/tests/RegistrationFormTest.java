@@ -2,13 +2,17 @@ package tests;
 
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Selenide;
+import helpers.Attach;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import pages.RegistrationFormPage;
+
+import java.util.Map;
 
 import static com.codeborne.selenide.Selenide.*;
 import static testdata.TestData.*;
@@ -25,6 +29,13 @@ public class RegistrationFormTest {
 
         Configuration.remote = "https://user1:1234@selenoid.autotests.cloud/wd/hub";
         Configuration.browserVersion = "128.0";
+
+        DesiredCapabilities capabilities = new DesiredCapabilities();
+        capabilities.setCapability("selenoid:options", Map.<String, Object>of(
+                "enableVNC", true,
+                "enableVideo", true
+        ));
+        Configuration.browserCapabilities = capabilities;
     }
 
     @BeforeEach
@@ -36,6 +47,15 @@ public class RegistrationFormTest {
     @AfterEach
     void tearDown() {
         Selenide.closeWebDriver();
+    }
+
+    @AfterEach
+    void addAttachment() {
+        Attach.screenshotAs("Last screenshot");
+        Attach.pageSource();
+        Attach.attachAsText("My", "Text");
+        Attach.browserConsoleLogs();
+        Attach.addVideo();
     }
 
     @Test
