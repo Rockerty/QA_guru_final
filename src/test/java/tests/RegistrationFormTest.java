@@ -25,16 +25,21 @@ public class RegistrationFormTest {
         String baseUrl = System.getProperty("baseUrl");
         String selenoidRemoteURL = System.getProperty("selenoidRemoteURL");
         String browser = System.getProperty("browser");
+        boolean isHeadless  = Boolean.parseBoolean(System.getProperty("isHeadless"));
+        String browserSize = System.getProperty("browserSize");
+        String browserVersion = System.getProperty("browserVersion");
 
-        System.out.println("beforeAll");
         Configuration.timeout = 10000;
-        Configuration.browserSize = "1920x1080";
+        Configuration.browserSize = browserSize;
         Configuration.baseUrl = baseUrl;
         Configuration.remote = selenoidRemoteURL;
+        Configuration.headless = isHeadless;
+        Configuration.browser = browser;
+        Configuration.browserVersion = browserVersion;
+        //Configuration.browserSize = "1920x1080";
         //Configuration.baseUrl = "https://app.qa.guru/";
         //Configuration.remote = "https://user1:1234@selenoid.autotests.cloud/wd/hub";
-        Configuration.browser = browser;
-        Configuration.browserVersion = "128.0";
+        //Configuration.browserVersion = "128.0";
 
         DesiredCapabilities capabilities = new DesiredCapabilities();
         capabilities.setCapability("selenoid:options", Map.<String, Object>of(
