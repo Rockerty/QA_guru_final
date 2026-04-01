@@ -23,14 +23,17 @@ public class RegistrationFormTest {
     @BeforeAll
     static void allTestsSetUp() {
         String baseUrl = System.getProperty("baseUrl");
+        String selenoidRemoteURL = System.getProperty("selenoidRemoteURL");
+        String browser = System.getProperty("browser");
 
         System.out.println("beforeAll");
         Configuration.timeout = 10000;
         Configuration.browserSize = "1920x1080";
         Configuration.baseUrl = baseUrl;
+        Configuration.remote = selenoidRemoteURL;
         //Configuration.baseUrl = "https://app.qa.guru/";
-
-        Configuration.remote = "https://user1:1234@selenoid.autotests.cloud/wd/hub";
+        //Configuration.remote = "https://user1:1234@selenoid.autotests.cloud/wd/hub";
+        Configuration.browser = browser;
         Configuration.browserVersion = "128.0";
 
         DesiredCapabilities capabilities = new DesiredCapabilities();
