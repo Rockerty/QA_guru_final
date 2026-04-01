@@ -53,7 +53,6 @@ public class RegistrationFormTest {
     void addAttachment() {
         Attach.screenshotAs("Last screenshot");
         Attach.pageSource();
-        Attach.attachAsText("My", "Text");
         Attach.browserConsoleLogs();
         Attach.addVideo();
     }
