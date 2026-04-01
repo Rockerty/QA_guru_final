@@ -84,11 +84,14 @@ test {
         }
     }
 
+    systemProperties(System.getProperties())
+
     testLogging {
         events "PASSED", "FAILED", "SKIPPED"
         exceptionFormat "short"
         showExceptions true
         showCauses true
         showStackTraces true
+        showStandardStreams true
     }
 }

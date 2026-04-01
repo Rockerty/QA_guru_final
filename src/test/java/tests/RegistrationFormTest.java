@@ -22,10 +22,13 @@ public class RegistrationFormTest {
 
     @BeforeAll
     static void allTestsSetUp() {
+        String baseUrl = System.getProperty("baseUrl");
+
         System.out.println("beforeAll");
         Configuration.timeout = 10000;
         Configuration.browserSize = "1920x1080";
-        Configuration.baseUrl = "https://app.qa.guru/";
+        Configuration.baseUrl = baseUrl;
+        //Configuration.baseUrl = "https://app.qa.guru/";
 
         Configuration.remote = "https://user1:1234@selenoid.autotests.cloud/wd/hub";
         Configuration.browserVersion = "128.0";
