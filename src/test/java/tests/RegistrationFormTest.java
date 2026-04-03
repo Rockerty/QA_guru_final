@@ -22,20 +22,13 @@ public class RegistrationFormTest {
 
     @BeforeAll
     static void allTestsSetUp() {
-        String baseUrl = System.getProperty("baseUrl");
-        String selenoidRemoteURL = System.getProperty("selenoidRemoteURL");
-        String browser = System.getProperty("browser");
-        boolean isHeadless  = Boolean.parseBoolean(System.getProperty("isHeadless"));
-        String browserSize = System.getProperty("browserSize");
-        String browserVersion = System.getProperty("browserVersion");
-
         Configuration.timeout = 10000;
-        Configuration.browserSize = browserSize;
-        Configuration.baseUrl = baseUrl;
-        Configuration.remote = selenoidRemoteURL;
-        Configuration.headless = isHeadless;
-        Configuration.browser = browser;
-        Configuration.browserVersion = browserVersion;
+        Configuration.browserSize = System.getProperty("browserSize");
+        Configuration.baseUrl = System.getProperty("baseUrl");;
+        Configuration.remote = System.getProperty("selenoidRemoteURL");
+        Configuration.headless = Boolean.parseBoolean(System.getProperty("isHeadless"));
+        Configuration.browser = System.getProperty("browser");
+        Configuration.browserVersion = System.getProperty("browserVersion");
         //Configuration.browserSize = "1920x1080";
         //Configuration.baseUrl = "https://app.qa.guru/";
         //Configuration.remote = "https://user1:1234@selenoid.autotests.cloud/wd/hub";
