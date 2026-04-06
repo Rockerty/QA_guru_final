@@ -14,7 +14,6 @@ public class DuckduckgoSearchTests {
 
     @BeforeAll
     static void allTestsSetUp() {
-        System.out.println("beforeAll");
         Configuration.timeout = 10000;
         Configuration.browserSize = "1920x1080";
 

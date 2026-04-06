@@ -95,3 +95,12 @@ test {
         showStandardStreams true
     }
 }
+
+tasks.register('dz_11', Test) {
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+
+    useJUnitPlatform {
+        includeTags 'dz_11'
+    }
+}

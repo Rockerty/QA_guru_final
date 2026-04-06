@@ -7,6 +7,7 @@ import helpers.Attach;
 import io.qameta.allure.selenide.AllureSelenide;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -25,7 +26,6 @@ public class GithubIssueTest {
 
     @BeforeAll
     static void allTestsSetUp() {
-        System.out.println("beforeAll");
         Configuration.timeout = 10000;
         Configuration.browserSize = "1920x1080";
         Configuration.baseUrl = "https://github.com/";
@@ -80,6 +80,7 @@ public class GithubIssueTest {
         githubSearchPage.nameAssertInIssueListByNumber("First issue for automated test", 1);
     }
 
+    @Tag("dz_11")
     @Test
     public void issueSearchWithLambdaStepsTest() {
         SelenideLogger.addListener("allure", new AllureSelenide());
@@ -102,6 +103,7 @@ public class GithubIssueTest {
         });
     }
 
+    @Tag("dz_11")
     @Test
     public void issueSearchWithAnnotatedStepsTest() {
         SelenideLogger.addListener("allure", new AllureSelenide());
