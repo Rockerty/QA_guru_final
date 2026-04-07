@@ -1,0 +1,16 @@
+{
+  "base": {
+    "project": "My project",
+    "environment": "None",
+    "comment": "@rockerty",
+    "reportLink": "https://jenkins.autotests.cloud/view/java_students/job/C40-Rockerty-UI-tests/24/",
+    "language": "en",
+    "allureFolder": "allure-report",
+    "enableChart": true
+  },
+  "telegram": {
+    "token": "8701213185:AAFyjMwjRJpTpBQaLTWD96nq-e8VXj12WOg",
+    "chat": "-4206534095",
+    "replyTo": ""
+  }
+}
