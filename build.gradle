@@ -10,6 +10,26 @@ repositories {
     mavenCentral()
 }
 
+// Общие настройки для ВСЕХ задач типа Test
+tasks.withType(Test) {
+    useJUnitPlatform {
+        if (project.hasProperty("includeTag")) {
+            includeTags project.property("includeTag")
+        }
+    }
+
+    systemProperties(System.getProperties())
+
+    testLogging {
+        events "PASSED", "FAILED", "SKIPPED"
+        exceptionFormat "short"
+        showExceptions true
+        showCauses true
+        showStackTraces true
+        showStandardStreams true
+    }
+}
+
 allure {
     version.set("2.34.1")
     adapter {
@@ -70,30 +90,6 @@ dependencies {
     testImplementation 'io.qameta.allure:allure-selenide:2.33.0'
 
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-}
-
-test {
-    useJUnitPlatform {
-    }
-}
-
-test {
-    useJUnitPlatform {
-        if (project.hasProperty("includeTag")) {
-            includeTags project.property("includeTag")
-        }
-    }
-
-    systemProperties(System.getProperties())
-
-    testLogging {
-        events "PASSED", "FAILED", "SKIPPED"
-        exceptionFormat "short"
-        showExceptions true
-        showCauses true
-        showStackTraces true
-        showStandardStreams true
-    }
 }
 
 tasks.register('dz_11', Test) {
