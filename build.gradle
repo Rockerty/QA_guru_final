@@ -88,6 +88,8 @@ dependencies {
     testImplementation "com.fasterxml.jackson.core:jackson-databind:2.13.1"
     testImplementation 'com.jayway.jsonpath:json-path:2.9.0'
     testImplementation 'io.qameta.allure:allure-selenide:2.33.0'
+    testImplementation 'io.rest-assured:rest-assured:6.0.0'
+    testImplementation 'io.rest-assured:json-schema-validator:6.0.0'
 
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
