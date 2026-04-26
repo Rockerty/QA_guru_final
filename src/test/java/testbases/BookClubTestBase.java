@@ -1,12 +1,12 @@
-package tests;
+package testbases;
 
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.BeforeAll;
 
-public class SelenoidTestBase {
+public class BookClubTestBase {
 
     @BeforeAll
     public static void SetUp(){
-        RestAssured.baseURI = "https://selenoid.autotests.cloud";
+        RestAssured.baseURI = "https://book-club.qa.guru";
     }
 }

@@ -1,6 +1,7 @@
 package tests;
 
 import org.junit.jupiter.api.Test;
+import testbases.SelenoidTestBase;
 
 import static io.restassured.RestAssured.given;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;

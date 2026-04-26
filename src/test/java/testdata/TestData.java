@@ -96,4 +96,9 @@ public class TestData {
                 Arguments.of("a@mail.ru", "E-mail must be at least 10 symbols long")
         );
     }
+
+    public static String randomString(int charactersNumber) {
+        return fakerRu.lorem().characters(charactersNumber);
+    }
+    public static String randomRefresh = randomString(10);
 }
