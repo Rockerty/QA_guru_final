@@ -6,6 +6,7 @@ import models.logout.NoRefreshLogoutResponseModel;
 import org.junit.jupiter.api.Test;
 import testbases.BookClubTestBase;
 
+import static io.qameta.allure.Allure.step;
 import static specs.login.DefaultSpec.defaultRequestSpec;
 import static specs.login.LogoutSpec.*;
 import static testdata.TestData.*;
@@ -25,35 +26,40 @@ public class LogoutTests extends BookClubTestBase {
         loginRequestModel.setUsername(username);
         loginRequestModel.setPassword(password);
 
-        String refreshToken = given()
-                .spec(loginRequestSpec)
-                .body(loginRequestModel)
-                .when()
-                .post("/api/v1/auth/token/")
-                .then()
-                .spec(successfulLoginResponseSpec)
-                .extract().path("refresh");
+        String refreshToken = step("Авторизация и получение токена", () -> {
+            return given()
+                    .spec(loginRequestSpec)
+                    .body(loginRequestModel)
+                    .when()
+                    .post("/auth/token/")
+                    .then()
+                    .spec(successfulLoginResponseSpec)
+                    .extract().path("refresh");
+        });
 
-        String logoutBody = "{\"refresh\":\"" + refreshToken + "\"}";
+        step("Успешный logout", () -> {
+            String logoutBody = "{\"refresh\":\"" + refreshToken + "\"}";
 
-        given()
-                .spec(defaultRequestSpec)
-                .body(logoutBody)
-                .when()
-                .post("/api/v1/auth/logout/")
-                .then()
-                .spec(successfulLogoutResponseSpec);
+            given()
+                    .spec(defaultRequestSpec)
+                    .body(logoutBody)
+                    .when()
+                    .post("/auth/logout/")
+                    .then()
+                    .spec(successfulLogoutResponseSpec);
+        });
     }
 
     @Test
     public void noTokenLogoutTest(){
         String logoutBody = "{\"refresh\":\"" + emptyToken + "\"}";
 
+        step("logout: токен отсутствует", () -> {
         NoRefreshLogoutResponseModel noRefreshLogoutResponseModel = given()
                 .spec(defaultRequestSpec)
                 .body(logoutBody)
                 .when()
-                .post("/api/v1/auth/logout/")
+                .post("/auth/logout/")
                 .then()
                 .spec(emptyRefreshLogoutResponseSpec)
                 .extract()
@@ -61,17 +67,19 @@ public class LogoutTests extends BookClubTestBase {
 
         String expectedError = "This field may not be blank.";
         assertEquals(expectedError, noRefreshLogoutResponseModel.getRefresh().get(0));
+        });
     }
 
     @Test
     public void randomRefreshLogoutTest(){
         String logoutBody = "{\"refresh\":\"" + randomRefresh + "\"}";
 
+        step("logout: случайный токен", () -> {
         IncorrectRefreshLogoutResponseModel incorrectRefreshLogoutResponseModel = given()
                 .spec(defaultRequestSpec)
                 .body(logoutBody)
                 .when()
-                .post("/api/v1/auth/logout/")
+                .post("/auth/logout/")
                 .then()
                 .spec(incorrectRefreshLogoutResponseSpec)
                 .extract().as(IncorrectRefreshLogoutResponseModel.class);
@@ -81,5 +89,6 @@ public class LogoutTests extends BookClubTestBase {
 
         assertEquals(expectedDetail, incorrectRefreshLogoutResponseModel.getDetail());
         assertEquals(expectedCode, incorrectRefreshLogoutResponseModel.getCode());
+        });
     }
 }

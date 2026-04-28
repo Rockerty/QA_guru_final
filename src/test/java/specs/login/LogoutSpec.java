@@ -13,23 +13,17 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 public class LogoutSpec {
 
     public static ResponseSpecification successfulLogoutResponseSpec = new ResponseSpecBuilder()
-            .log(LogDetail.STATUS)
-            .log(LogDetail.HEADERS)
-            .log(LogDetail.BODY)
+            .log(LogDetail.ALL)
             .expectStatusCode(200)
             .build();
 
     public static ResponseSpecification incorrectRefreshLogoutResponseSpec = new ResponseSpecBuilder()
-            .log(LogDetail.STATUS)
-            .log(LogDetail.HEADERS)
-            .log(LogDetail.BODY)
+            .log(LogDetail.ALL)
             .expectStatusCode(401)
             .build();
 
     public static ResponseSpecification emptyRefreshLogoutResponseSpec = new ResponseSpecBuilder()
-            .log(LogDetail.STATUS)
-            .log(LogDetail.HEADERS)
-            .log(LogDetail.BODY)
+            .log(LogDetail.ALL)
             .expectStatusCode(400)
             .build();
 }

@@ -7,6 +7,7 @@ import models.login.SuccessfulLoginResponseModel;
 import org.junit.jupiter.api.Test;
 import testbases.BookClubTestBase;
 
+import static io.qameta.allure.Allure.step;
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -23,24 +24,25 @@ public class LoginTests extends BookClubTestBase {
 
 
     @Test
-    public void successfulLoginTest(){
+    public void successfulLoginTest() {
         LoginRequestModel loginRequestModel = new LoginRequestModel();
         loginRequestModel.setUsername(username);
         loginRequestModel.setPassword(password);
 
-        SuccessfulLoginResponseModel successfulLoginResponseModel = given()
-                .spec(loginRequestSpec)
-                .body(loginRequestModel)
-                .when()
-                .post("/api/v1/auth/token/")
-                .then()
-                .spec(successfulLoginResponseSpec)
-                .extract().as(SuccessfulLoginResponseModel.class);
+        step("Успешная авторизация", () -> {
+            SuccessfulLoginResponseModel successfulLoginResponseModel = given()
+                    .spec(loginRequestSpec)
+                    .body(loginRequestModel)
+                    .when()
+                    .post("/auth/token/")
+                    .then()
+                    .spec(successfulLoginResponseSpec)
+                    .extract().as(SuccessfulLoginResponseModel.class);
 
-        String actualAccess = successfulLoginResponseModel.getAccess();
-        String actualRefresh = successfulLoginResponseModel.getRefresh();
-
-        assertThat(actualAccess).isNotEqualTo(actualRefresh);
+            String actualAccess = successfulLoginResponseModel.getAccess();
+            String actualRefresh = successfulLoginResponseModel.getRefresh();
+            assertThat(actualAccess).isNotEqualTo(actualRefresh);
+        });
     }
 
     @Test
@@ -49,19 +51,21 @@ public class LoginTests extends BookClubTestBase {
         loginRequestModel.setUsername(username);
         loginRequestModel.setPassword(incorrectPassword);
 
-        IncorrectLoginResponseModel incorrectLoginResponseModel = given()
-                .spec(loginRequestSpec)
-                .body(loginRequestModel)
-                .when()
-                .post("/api/v1/auth/token/")
-                .then()
-                .spec(incorrectPasswordLoginResponseSpec)
-                .extract().as(IncorrectLoginResponseModel.class);
+        step("Авторизация: некорректный пароль", () -> {
+            IncorrectLoginResponseModel incorrectLoginResponseModel = given()
+                    .spec(loginRequestSpec)
+                    .body(loginRequestModel)
+                    .when()
+                    .post("/auth/token/")
+                    .then()
+                    .spec(incorrectPasswordLoginResponseSpec)
+                    .extract().as(IncorrectLoginResponseModel.class);
 
-        String incorrectCredsError = "Invalid username or password.";
-        String actualCredsError = incorrectLoginResponseModel.getDetail();
+            String incorrectCredsError = "Invalid username or password.";
+            String actualCredsError = incorrectLoginResponseModel.getDetail();
 
-        assertThat(incorrectCredsError).isEqualTo(actualCredsError);
+            assertThat(incorrectCredsError).isEqualTo(actualCredsError);
+        });
     }
 
     @Test
@@ -70,11 +74,12 @@ public class LoginTests extends BookClubTestBase {
         loginRequestModel.setUsername(emptyUsername);
         loginRequestModel.setPassword(emptyPassword);
 
+        step("Авторизация: пустые имя и пароль", () -> {
         EmptyCredsLoginResponseModel emptyCredsLoginResponseModel = given()
                 .spec(loginRequestSpec)
                 .body(loginRequestModel)
                 .when()
-                .post("/api/v1/auth/token/")
+                .post("/auth/token/")
                 .then()
                 .spec(emptyCredsLoginResponseSpec)
                 .extract().as(EmptyCredsLoginResponseModel.class);
@@ -84,5 +89,6 @@ public class LoginTests extends BookClubTestBase {
 
         assertEquals(expectedUsernameError, emptyCredsLoginResponseModel.getUsername().get(0));
         assertEquals(expectedPasswordError, emptyCredsLoginResponseModel.getPassword().get(0));
+        });
     }
 }

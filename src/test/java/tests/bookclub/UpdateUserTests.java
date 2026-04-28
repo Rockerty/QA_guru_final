@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import testbases.BookClubTestBase;
 
+import static io.qameta.allure.Allure.step;
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static specs.login.DefaultSpec.defaultRequestSpec;
@@ -38,49 +39,51 @@ public class UpdateUserTests extends BookClubTestBase {
 
     @Test
     public void successfulUpdateUserTest(){
-//      Регистрация нового пользователя
         RegistrationRequestModel registrationRequestModel = new RegistrationRequestModel();
         registrationRequestModel.setUsername(username);
         registrationRequestModel.setPassword(password);
 
+        step("Регистрация нового пользователя", () -> {
         SuccessfulRegistrationResponseModel successfulRegistrationResponse = given()
                 .spec(defaultRequestSpec)
                 .body(registrationRequestModel)
                 .when()
-                .post("/api/v1/users/register/")
+                .post("/users/register/")
                 .then()
                 .spec(defaultResponseSpec)
                 .statusCode(201)
                 .extract()
                 .as(SuccessfulRegistrationResponseModel.class);
+        });
 
-//      Получение токена созданного пользователя (необходимо для update)
         LoginRequestModel loginRequestModel = new LoginRequestModel();
         loginRequestModel.setUsername(username);
         loginRequestModel.setPassword(password);
 
-        String accessToken = given()
-                .spec(loginRequestSpec)
-                .body(loginRequestModel)
-                .when()
-                .post("/api/v1/auth/token/")
-                .then()
-                .spec(successfulLoginResponseSpec)
-                .extract().path("access");
+        String accessToken = step("Получение токена созданного пользователя", () -> {
+            return given()
+                    .spec(loginRequestSpec)
+                    .body(loginRequestModel)
+                    .when()
+                    .post("/auth/token/")
+                    .then()
+                    .spec(successfulLoginResponseSpec)
+                    .extract().path("access");
+        });
 
-//      Редактирование пользователя
         UpdateRequestModel updateRequestModel = new UpdateRequestModel();
         updateRequestModel.setUsername(username);
         updateRequestModel.setFirstName(firstName);
         updateRequestModel.setLastName(lastName);
         updateRequestModel.setEmail(email);
 
+        step("Редактирование пользователя", () -> {
         SuccessfulUpdateResponseModel successfulUpdateResponseModel = given()
                 .spec(defaultRequestSpec)
                 .auth().oauth2(accessToken)
                 .body(updateRequestModel)
                 .when()
-                .patch("/api/v1/users/me/")
+                .patch("/users/me/")
                 .then()
                 .spec(defaultResponseSpec)
                 .extract()
@@ -90,54 +93,58 @@ public class UpdateUserTests extends BookClubTestBase {
         assertEquals(firstName, successfulUpdateResponseModel.getFirstName());
         assertEquals(lastName, successfulUpdateResponseModel.getLastName());
         assertEquals(email, successfulUpdateResponseModel.getEmail());
+        });
     }
 
     @Test
     public void invalidEmailUpdateUserTest() {
         invalidEmail = "isNotEmail";
 
-//      Регистрация нового пользователя
         RegistrationRequestModel registrationRequestModel = new RegistrationRequestModel();
         registrationRequestModel.setUsername(username);
         registrationRequestModel.setPassword(password);
 
+        step("Регистрация нового пользователя", () -> {
         SuccessfulRegistrationResponseModel successfulRegistrationResponse = given()
                 .spec(defaultRequestSpec)
                 .body(registrationRequestModel)
                 .when()
-                .post("/api/v1/users/register/")
+                .post("/users/register/")
                 .then()
                 .spec(defaultResponseSpec)
                 .statusCode(201)
                 .extract()
                 .as(SuccessfulRegistrationResponseModel.class);
+        });
 
-//      Получение токена созданного пользователя (необходимо для update)
         LoginRequestModel loginRequestModel = new LoginRequestModel();
         loginRequestModel.setUsername(username);
         loginRequestModel.setPassword(password);
 
-        String accessToken = given()
-                .spec(loginRequestSpec)
-                .body(loginRequestModel)
-                .when()
-                .post("/api/v1/auth/token/")
-                .then()
-                .spec(successfulLoginResponseSpec)
-                .extract().path("access");
-//      Редактирование пользователя с некорректным email
+        String accessToken = step("Получение токена созданного пользователя", () -> {
+            return given()
+                    .spec(loginRequestSpec)
+                    .body(loginRequestModel)
+                    .when()
+                    .post("/auth/token/")
+                    .then()
+                    .spec(successfulLoginResponseSpec)
+                    .extract().path("access");
+        });
+
         UpdateRequestModel updateRequestModel = new UpdateRequestModel();
         updateRequestModel.setUsername(username);
         updateRequestModel.setFirstName(firstName);
         updateRequestModel.setLastName(lastName);
         updateRequestModel.setEmail(invalidEmail);
 
+        step("Редактирование пользователя с некорректным email", () -> {
         InvalidEmailUpdateResponseModel invalidEmailUpdateResponseModel = given()
                 .spec(defaultRequestSpec)
                 .auth().oauth2(accessToken)
                 .body(updateRequestModel)
                 .when()
-                .patch("/api/v1/users/me/")
+                .patch("/users/me/")
                 .then()
                 .spec(defaultResponseSpec)
                 .extract()
@@ -146,52 +153,56 @@ public class UpdateUserTests extends BookClubTestBase {
         String expectedError = "Enter a valid email address.";
 
         assertEquals(expectedError, invalidEmailUpdateResponseModel.getEmail().get(0));
+        });
     }
 
     @Test
     public void nullEmailUpdateUserTest() {
-//      Регистрация нового пользователя
         RegistrationRequestModel registrationRequestModel = new RegistrationRequestModel();
         registrationRequestModel.setUsername(username);
         registrationRequestModel.setPassword(password);
 
+        step("Регистрация нового пользователя", () -> {
         SuccessfulRegistrationResponseModel successfulRegistrationResponse = given()
                 .spec(defaultRequestSpec)
                 .body(registrationRequestModel)
                 .when()
-                .post("/api/v1/users/register/")
+                .post("/users/register/")
                 .then()
                 .spec(defaultResponseSpec)
                 .statusCode(201)
                 .extract()
                 .as(SuccessfulRegistrationResponseModel.class);
+        });
 
-//      Получение токена созданного пользователя (необходимо для update)
         LoginRequestModel loginRequestModel = new LoginRequestModel();
         loginRequestModel.setUsername(username);
         loginRequestModel.setPassword(password);
 
-        String accessToken = given()
-                .spec(loginRequestSpec)
-                .body(loginRequestModel)
-                .when()
-                .post("/api/v1/auth/token/")
-                .then()
-                .spec(successfulLoginResponseSpec)
-                .extract().path("access");
-//      Редактирование пользователя с некорректным email
+        String accessToken = step("Получение токена созданного пользователя", () -> {
+            return given()
+                    .spec(loginRequestSpec)
+                    .body(loginRequestModel)
+                    .when()
+                    .post("/auth/token/")
+                    .then()
+                    .spec(successfulLoginResponseSpec)
+                    .extract().path("access");
+        });
+
         UpdateRequestModel updateRequestModel = new UpdateRequestModel();
         updateRequestModel.setUsername(username);
         updateRequestModel.setFirstName(firstName);
         updateRequestModel.setLastName(lastName);
         updateRequestModel.setEmail(emptyEmail);
 
+        step("Редактирование пользователя с некорректным email", () -> {
         InvalidEmailUpdateResponseModel invalidEmailUpdateResponseModel = given()
                 .spec(defaultRequestSpec)
                 .auth().oauth2(accessToken)
                 .body(updateRequestModel)
                 .when()
-                .patch("/api/v1/users/me/")
+                .patch("/users/me/")
                 .then()
                 .spec(defaultResponseSpec)
                 .extract()
@@ -200,6 +211,7 @@ public class UpdateUserTests extends BookClubTestBase {
         String expectedError = "This field may not be null.";
 
         assertEquals(expectedError, invalidEmailUpdateResponseModel.getEmail().get(0));
+        });
 
     }
 }

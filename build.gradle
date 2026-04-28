@@ -92,6 +92,7 @@ dependencies {
     testImplementation 'io.rest-assured:rest-assured:6.0.0'
     testImplementation 'io.rest-assured:json-schema-validator:6.0.0'
     testImplementation 'org.assertj:assertj-core:3.27.7'
+    testImplementation 'io.qameta.allure:allure-rest-assured:2.34.0'
 
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
