@@ -7,17 +7,17 @@ import models.club.SuccessfulUpdateClubResponseModel;
 import models.club.UpdateClubRequestModel;
 
 import static io.restassured.RestAssured.given;
+import static specs.club.ClubSpec.clubRequestSpec;
 import static specs.club.ClubSpec.successfulCreateClubResponseSpec;
 import static specs.club.ClubSpec.successfulDeleteClubResponseSpec;
 import static specs.club.ClubSpec.successfulGetClubResponseSpec;
 import static specs.club.ClubSpec.successfulUpdateClubResponseSpec;
-import static specs.login.DefaultSpec.defaultRequestSpec;
 
 public class ClubApiClient {
 
     public SuccessfulCreateClubResponseModel successfulCreateClub(String accessToken, CreateClubRequestModel createClubRequestModel) {
         return given()
-                .spec(defaultRequestSpec)
+                .spec(clubRequestSpec)
                 .auth().oauth2(accessToken)
                 .body(createClubRequestModel)
                 .when()
@@ -30,7 +30,7 @@ public class ClubApiClient {
 
     public GetClubResponseModel successfulGetClub(Integer clubId) {
         return given()
-                .spec(defaultRequestSpec)
+                .spec(clubRequestSpec)
                 .when()
                 .get("/clubs/" + clubId + "/")
                 .then()
@@ -41,7 +41,7 @@ public class ClubApiClient {
 
     public SuccessfulUpdateClubResponseModel successfulUpdateClub(String accessToken, Integer clubId, UpdateClubRequestModel updateClubRequestModel) {
         return given()
-                .spec(defaultRequestSpec)
+                .spec(clubRequestSpec)
                 .auth().oauth2(accessToken)
                 .body(updateClubRequestModel)
                 .when()
@@ -54,7 +54,7 @@ public class ClubApiClient {
 
     public void successfulDeleteClub(String accessToken, Integer clubId) {
         given()
-                .spec(defaultRequestSpec)
+                .spec(clubRequestSpec)
                 .auth().oauth2(accessToken)
                 .when()
                 .delete("/clubs/" + clubId + "/")
