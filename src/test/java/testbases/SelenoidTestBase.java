@@ -6,7 +6,7 @@ import org.junit.jupiter.api.BeforeAll;
 public class SelenoidTestBase {
 
     @BeforeAll
-    public static void SetUp(){
+    public static void setUp(){
         RestAssured.baseURI = "https://selenoid.autotests.cloud";
     }
 }
