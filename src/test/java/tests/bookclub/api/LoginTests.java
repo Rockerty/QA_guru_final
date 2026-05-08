@@ -1,10 +1,11 @@
-package tests.bookclub;
+package tests.bookclub.api;
 
 import models.login.EmptyCredsLoginResponseModel;
 import models.login.IncorrectLoginResponseModel;
 import models.login.LoginRequestModel;
 import models.login.SuccessfulLoginResponseModel;
 import org.junit.jupiter.api.Test;
+import tests.bookclub.BookClubTestBase;
 
 import static io.qameta.allure.Allure.step;
 import static org.assertj.core.api.Assertions.assertThat;

@@ -1,4 +1,4 @@
-package tests.bookclub;
+package tests.bookclub.api;
 
 import com.github.javafaker.Faker;
 import models.club.CreateClubRequestModel;
@@ -10,6 +10,7 @@ import models.login.SuccessfulLoginResponseModel;
 import models.registration.RegistrationRequestModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import tests.bookclub.BookClubTestBase;
 
 import static io.qameta.allure.Allure.step;
 import static org.junit.jupiter.api.Assertions.assertEquals;

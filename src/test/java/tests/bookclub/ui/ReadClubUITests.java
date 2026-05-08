@@ -1,6 +1,8 @@
 package tests.bookclub.ui;
 
 import com.github.javafaker.Faker;
+import models.club.CreateClubRequestModel;
+import models.club.SuccessfulCreateClubResponseModel;
 import models.login.LoginRequestModel;
 import models.login.SuccessfulLoginResponseModel;
 import models.registration.RegistrationRequestModel;
@@ -10,13 +12,12 @@ import org.junit.jupiter.api.Test;
 import pages.BookClubPage;
 import tests.bookclub.BookClubTestBase;
 
-import java.util.List;
-
-import static com.codeborne.selenide.Selenide.*;
-import static io.qameta.allure.Allure.step;
+import static com.codeborne.selenide.Selenide.localStorage;
 import static helpers.LocalStorageHelper.buildAuthData;
+import static io.qameta.allure.Allure.step;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class CreateClubFromUITests extends BookClubTestBase {
+public class ReadClubUITests extends BookClubTestBase {
     BookClubPage bookClubPage = new BookClubPage();
 
     String username;
@@ -30,11 +31,7 @@ public class CreateClubFromUITests extends BookClubTestBase {
     String description;
     String telegramChatLink;
     String localStorageData;
-    String requiredBookTitleMessage;
-    String requiredBookAuthorsMessage;
-    String requiredPublicationYearMessage;
-    String requiredDescriptionMessage;
-    String requiredTelegramChatLinkMessage;
+    Integer clubId;
 
     @BeforeEach
     public void allTestsSetUp() {
@@ -46,23 +43,16 @@ public class CreateClubFromUITests extends BookClubTestBase {
         publicationYear = faker.number().numberBetween(1900, 2026);
         description = faker.lorem().sentence();
         telegramChatLink = "https://t.me/" + username;
-        requiredBookTitleMessage = "Название книги обязательно";
-        requiredBookAuthorsMessage = "Автор(ы) книги обязательно";
-        requiredPublicationYearMessage = "Год выпуска обязательно";
-        requiredDescriptionMessage = "Описание книги обязательно";
-        requiredTelegramChatLinkMessage = "Ссылка на Telegram чат обязательна";
     }
 
     @Test
-    public void successfulCreateClubFromUITest() {
+    public void myClubsTabUITest(){
         step("Регистрация нового пользователя", () -> {
             RegistrationRequestModel registrationRequestModel = new RegistrationRequestModel();
             registrationRequestModel.setUsername(username);
             registrationRequestModel.setPassword(password);
 
-            SuccessfulRegistrationResponseModel successfulRegistrationResponse = registrationApiClient.successfulRegistration(registrationRequestModel);
-
-            userId = successfulRegistrationResponse.getId().toString();
+            registrationApiClient.successfulRegistration(registrationRequestModel);
         });
 
         step("Получение токенов созданного пользователя", () -> {
@@ -76,6 +66,23 @@ public class CreateClubFromUITests extends BookClubTestBase {
             refreshToken = successfulLoginResponseModel.getRefresh();
         });
 
+        step("Создание книжного клуба", () -> {
+            CreateClubRequestModel createClubRequestModel = new CreateClubRequestModel();
+            createClubRequestModel.setBookTitle(bookTitle);
+            createClubRequestModel.setBookAuthors(bookAuthors);
+            createClubRequestModel.setPublicationYear(publicationYear);
+            createClubRequestModel.setDescription(description);
+            createClubRequestModel.setTelegramChatLink(telegramChatLink);
+
+            SuccessfulCreateClubResponseModel successfulCreateClubResponseModel =
+                    clubApiClient.successfulCreateClub(accessToken, createClubRequestModel);
+
+            assertEquals(bookTitle, successfulCreateClubResponseModel.getBookTitle());
+            assertEquals(bookAuthors, successfulCreateClubResponseModel.getBookAuthors());
+            assertEquals(publicationYear, successfulCreateClubResponseModel.getPublicationYear());
+            assertEquals(description, successfulCreateClubResponseModel.getDescription());
+            assertEquals(telegramChatLink, successfulCreateClubResponseModel.getTelegramChatLink());
+        });
 
         step("Формирование localStorageData", () -> {
             localStorageData = buildAuthData(userId, username, accessToken, refreshToken);
@@ -87,45 +94,24 @@ public class CreateClubFromUITests extends BookClubTestBase {
             bookClubPage.openMainPage();
         });
 
-        step("Создание клуба", () -> {
-            bookClubPage.clickCreateBookClubButton();
-            bookClubPage.createClub(
-                    bookTitle,
-                    bookAuthors,
-                    publicationYear.toString(),
-                    description,
-                    telegramChatLink);
-        });
-
-        step("Поиск клуба", () -> {
-            bookClubPage.searchByTitle(bookTitle);
+        step("Переход во вкладку 'Мои клубы'", () -> {
+            bookClubPage.enterTabByName("Мои клубы");
         });
 
         step("Проверка отображения клуба в списке", () -> {
             bookClubPage.clubInListAssert(bookTitle, bookAuthors,
                     publicationYear.toString(), description);
         });
-
-        step("Вход в карточку клуба", () -> {
-            bookClubPage.clickActionButtonOnCardByName(bookTitle);
-        });
-
-        step("Проверка карточки клуба", () -> {
-            bookClubPage.verifyClubContainsInCard(bookTitle, bookAuthors,
-                    publicationYear.toString(), description);
-        });
     }
 
     @Test
-    public void requiredFieldsInCreateFromUITest() {
+    public void participateClubsTabUITest(){
         step("Регистрация нового пользователя", () -> {
             RegistrationRequestModel registrationRequestModel = new RegistrationRequestModel();
             registrationRequestModel.setUsername(username);
             registrationRequestModel.setPassword(password);
 
-            SuccessfulRegistrationResponseModel successfulRegistrationResponse = registrationApiClient.successfulRegistration(registrationRequestModel);
-
-            userId = successfulRegistrationResponse.getId().toString();
+            registrationApiClient.successfulRegistration(registrationRequestModel);
         });
 
         step("Получение токенов созданного пользователя", () -> {
@@ -139,6 +125,23 @@ public class CreateClubFromUITests extends BookClubTestBase {
             refreshToken = successfulLoginResponseModel.getRefresh();
         });
 
+        step("Создание книжного клуба", () -> {
+            CreateClubRequestModel createClubRequestModel = new CreateClubRequestModel();
+            createClubRequestModel.setBookTitle(bookTitle);
+            createClubRequestModel.setBookAuthors(bookAuthors);
+            createClubRequestModel.setPublicationYear(publicationYear);
+            createClubRequestModel.setDescription(description);
+            createClubRequestModel.setTelegramChatLink(telegramChatLink);
+
+            SuccessfulCreateClubResponseModel successfulCreateClubResponseModel =
+                    clubApiClient.successfulCreateClub(accessToken, createClubRequestModel);
+
+            assertEquals(bookTitle, successfulCreateClubResponseModel.getBookTitle());
+            assertEquals(bookAuthors, successfulCreateClubResponseModel.getBookAuthors());
+            assertEquals(publicationYear, successfulCreateClubResponseModel.getPublicationYear());
+            assertEquals(description, successfulCreateClubResponseModel.getDescription());
+            assertEquals(telegramChatLink, successfulCreateClubResponseModel.getTelegramChatLink());
+        });
 
         step("Формирование localStorageData", () -> {
             localStorageData = buildAuthData(userId, username, accessToken, refreshToken);
@@ -150,22 +153,13 @@ public class CreateClubFromUITests extends BookClubTestBase {
             bookClubPage.openMainPage();
         });
 
-        step("Переход в форму создания", () -> {
-            bookClubPage.clickCreateBookClubButton();
+        step("Переход во вкладку 'Участвую'", () -> {
+            bookClubPage.enterTabByName("Участвую");
         });
 
-        step("Нажатие на кнопку создания клуба", () -> {
-            bookClubPage.clickSubmitButton();
-        });
-
-        step("Проверка подсказок обязательности полей", () -> {
-            bookClubPage.createClubFormAssert(List.of(
-                    requiredBookTitleMessage,
-                    requiredBookAuthorsMessage,
-                    requiredPublicationYearMessage,
-                    requiredDescriptionMessage,
-                    requiredTelegramChatLinkMessage
-            ));
+        step("Проверка отображения клуба в списке", () -> {
+            bookClubPage.clubInListAssert(bookTitle, bookAuthors,
+                    publicationYear.toString(), description);
         });
     }
 }

@@ -2,7 +2,10 @@ package pages;
 
 import com.codeborne.selenide.SelenideElement;
 
+import java.util.List;
+
 import static com.codeborne.selenide.Condition.text;
+import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.*;
 
 public class BookClubPage {
@@ -14,9 +17,11 @@ public class BookClubPage {
     private static final String searchButton = "//*[@class='search-button']";
     private static final String clubCardInList = "//*[@class='club-card']";
     private static final String clubTabsByNameXpathTemplate = "//button[normalize-space()='%s']";
-    private static final String clubEnterButtonByNameXpathTemplate = "//h2[contains(text(),\"%s\")]/ancestor::div[@class=\"club-card\"]//button";
+    private static final String clubActionButtonByNameXpathTemplate = "//h2[contains(text(),\"%s\")]/ancestor::div[@class=\"club-card\"]//button";
     private static final String leaveClubButton = "//*[@class='leave-btn']";
     private static final String clubDetails = "//*[@class='club-details']";
+    private static final String createClubForm = "//*[@class='club-form']";
+
 
     //Actions
     public void enterFieldById(String fieldId, String value) {
@@ -75,8 +80,8 @@ public class BookClubPage {
         $x(xpath).scrollTo().click();
     }
 
-    public void enterClubCardByName(String clubName) {
-        String xpath = String.format(clubEnterButtonByNameXpathTemplate, clubName);
+    public void clickActionButtonOnCardByName(String clubName) {
+        String xpath = String.format(clubActionButtonByNameXpathTemplate, clubName);
         $x(xpath).scrollTo().click();
     }
 
@@ -95,5 +100,15 @@ public class BookClubPage {
 
     public void clubDetailMessage(String messageText) {
         $x(clubDetails).shouldHave(text(messageText));
+    }
+
+    public void createClubFormAssert(List<String> expectedTexts) {
+        for (String text : expectedTexts) {
+            $x(createClubForm).shouldHave(text(text));
+        }
+    }
+
+    public void leaveClubButtonExistsAssert() {
+        $x(leaveClubButton).shouldBe(visible);
     }
 }

@@ -1,18 +1,20 @@
-package tests.bookclub;
+package tests.bookclub.api;
 
 import com.github.javafaker.Faker;
 import models.club.CreateClubRequestModel;
+import models.club.GetClubResponseModel;
 import models.club.SuccessfulCreateClubResponseModel;
 import models.login.LoginRequestModel;
 import models.login.SuccessfulLoginResponseModel;
 import models.registration.RegistrationRequestModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import tests.bookclub.BookClubTestBase;
 
 import static io.qameta.allure.Allure.step;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class CreateClubTests extends BookClubTestBase {
+public class GetClubTests extends BookClubTestBase {
     String username;
     String password;
     String bookTitle;
@@ -34,7 +36,7 @@ public class CreateClubTests extends BookClubTestBase {
     }
 
     @Test
-    public void successfulCreateClubTest(){
+    public void successfulGetClubTest(){
         step("Регистрация нового пользователя", () -> {
             RegistrationRequestModel registrationRequestModel = new RegistrationRequestModel();
             registrationRequestModel.setUsername(username);
@@ -54,7 +56,7 @@ public class CreateClubTests extends BookClubTestBase {
             return successfulLoginResponseModel.getAccess();
         });
 
-        step("Создание книжного клуба", () -> {
+        Integer clubId = step("Создание книжного клуба", () -> {
             CreateClubRequestModel createClubRequestModel = new CreateClubRequestModel();
             createClubRequestModel.setBookTitle(bookTitle);
             createClubRequestModel.setBookAuthors(bookAuthors);
@@ -65,11 +67,18 @@ public class CreateClubTests extends BookClubTestBase {
             SuccessfulCreateClubResponseModel successfulCreateClubResponseModel =
                     clubApiClient.successfulCreateClub(accessToken, createClubRequestModel);
 
-            assertEquals(bookTitle, successfulCreateClubResponseModel.getBookTitle());
-            assertEquals(bookAuthors, successfulCreateClubResponseModel.getBookAuthors());
-            assertEquals(publicationYear, successfulCreateClubResponseModel.getPublicationYear());
-            assertEquals(description, successfulCreateClubResponseModel.getDescription());
-            assertEquals(telegramChatLink, successfulCreateClubResponseModel.getTelegramChatLink());
+            return successfulCreateClubResponseModel.getId();
+        });
+
+        step("Получение книжного клуба", () -> {
+            GetClubResponseModel getClubResponseModel = clubApiClient.successfulGetClub(clubId);
+
+            assertEquals(clubId, getClubResponseModel.getId());
+            assertEquals(bookTitle, getClubResponseModel.getBookTitle());
+            assertEquals(bookAuthors, getClubResponseModel.getBookAuthors());
+            assertEquals(publicationYear, getClubResponseModel.getPublicationYear());
+            assertEquals(description, getClubResponseModel.getDescription());
+            assertEquals(telegramChatLink, getClubResponseModel.getTelegramChatLink());
         });
     }
 }

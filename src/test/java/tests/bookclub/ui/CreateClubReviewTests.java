@@ -1,4 +1,4 @@
-package tests.bookclub;
+package tests.bookclub.ui;
 
 import com.github.javafaker.Faker;
 import models.club.CreateClubRequestModel;
@@ -8,17 +8,31 @@ import models.login.SuccessfulLoginResponseModel;
 import models.registration.RegistrationRequestModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import pages.BookClubPage;
+import tests.bookclub.BookClubTestBase;
 
+import static com.codeborne.selenide.Selenide.localStorage;
+import static com.codeborne.selenide.Selenide.open;
+import static helpers.LocalStorageHelper.buildAuthData;
 import static io.qameta.allure.Allure.step;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class DeleteClubTests extends BookClubTestBase {
+public class CreateClubReviewTests extends BookClubTestBase {
+    BookClubPage bookClubPage = new BookClubPage();
+
     String username;
+    String secondUsername;
     String password;
+    String userId;
+    String accessToken;
+    String refreshToken;
     String bookTitle;
     String bookAuthors;
     Integer publicationYear;
     String description;
     String telegramChatLink;
+    String localStorageData;
+    Integer clubId;
 
     @BeforeEach
     public void allTestsSetUp() {
@@ -33,7 +47,7 @@ public class DeleteClubTests extends BookClubTestBase {
     }
 
     @Test
-    public void successfulDeleteClubTest(){
+    public void successfulCreateClubReviewTest(){
         step("Регистрация нового пользователя", () -> {
             RegistrationRequestModel registrationRequestModel = new RegistrationRequestModel();
             registrationRequestModel.setUsername(username);
@@ -53,7 +67,7 @@ public class DeleteClubTests extends BookClubTestBase {
             return successfulLoginResponseModel.getAccess();
         });
 
-        Integer clubId = step("Создание книжного клуба", () -> {
+        step("Создание книжного клуба", () -> {
             CreateClubRequestModel createClubRequestModel = new CreateClubRequestModel();
             createClubRequestModel.setBookTitle(bookTitle);
             createClubRequestModel.setBookAuthors(bookAuthors);
@@ -64,11 +78,23 @@ public class DeleteClubTests extends BookClubTestBase {
             SuccessfulCreateClubResponseModel successfulCreateClubResponseModel =
                     clubApiClient.successfulCreateClub(accessToken, createClubRequestModel);
 
-            return successfulCreateClubResponseModel.getId();
+            clubId = successfulCreateClubResponseModel.getId();
+
+            assertEquals(bookTitle, successfulCreateClubResponseModel.getBookTitle());
+            assertEquals(bookAuthors, successfulCreateClubResponseModel.getBookAuthors());
+            assertEquals(publicationYear, successfulCreateClubResponseModel.getPublicationYear());
+            assertEquals(description, successfulCreateClubResponseModel.getDescription());
+            assertEquals(telegramChatLink, successfulCreateClubResponseModel.getTelegramChatLink());
         });
 
-        step("Удаление книжного клуба", () -> {
-            clubApiClient.successfulDeleteClub(accessToken, clubId);
+        step("Формирование localStorageData", () -> {
+            localStorageData = buildAuthData(userId, username, accessToken, refreshToken);
+        });
+
+        step("Вход в карточку созданного клуба", () -> {
+            bookClubPage.openFavicon();
+            localStorage().setItem("book_club_auth", localStorageData);
+            open("/clubs/" + clubId);
         });
     }
 }
