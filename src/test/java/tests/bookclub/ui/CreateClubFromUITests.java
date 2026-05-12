@@ -102,8 +102,11 @@ public class CreateClubFromUITests extends BookClubTestBase {
         });
 
         step("Проверка отображения клуба в списке", () -> {
-            bookClubPage.clubInListAssert(bookTitle, bookAuthors,
-                    publicationYear.toString(), description);
+            bookClubPage.clubInListAssert(
+                    bookTitle,
+                    bookAuthors,
+                    publicationYear.toString(),
+                    description);
         });
 
         step("Вход в карточку клуба", () -> {
@@ -111,8 +114,11 @@ public class CreateClubFromUITests extends BookClubTestBase {
         });
 
         step("Проверка карточки клуба", () -> {
-            bookClubPage.verifyClubContainsInCard(bookTitle, bookAuthors,
-                    publicationYear.toString(), description);
+            bookClubPage.verifyClubContainsInCard(
+                    bookTitle,
+                    bookAuthors,
+                    publicationYear.toString(),
+                    description);
         });
     }
 

@@ -21,6 +21,9 @@ public class BookClubPage {
     private static final String leaveClubButton = "//*[@class='leave-btn']";
     private static final String clubDetails = "//*[@class='club-details']";
     private static final String createClubForm = "//*[@class='club-form']";
+    private static final String createReviewButton = "//*[@class='add-review-btn']";
+    private static final String userClubReviewCard = "(//div[@class='review-card user-review'])[1]";
+    private static final String reviewUpdateButtonInClubCard = "(//button[contains(@class, 'edit-review-btn')])[1]";
 
 
     //Actions
@@ -54,6 +57,10 @@ public class BookClubPage {
         $x(clubCardInList).shouldHave(text(expectedText));
     }
 
+    public void verifyReviewInClubCard(String expectedText) {
+        $x(userClubReviewCard).shouldHave(text(expectedText));
+    }
+
     public void verifyClubContainsInCard(String bookTitle,
                                          String bookAuthors,
                                          String publicationYear,
@@ -85,8 +92,10 @@ public class BookClubPage {
         $x(xpath).scrollTo().click();
     }
 
-    public void clubInListAssert(String bookTitle, String bookAuthors,
-                                 String publicationYear, String description) {
+    public void clubInListAssert(String bookTitle,
+                                 String bookAuthors,
+                                 String publicationYear,
+                                 String description) {
         verifyClubContainsInList(bookTitle);
         verifyClubContainsInList(bookAuthors);
         verifyClubContainsInList(publicationYear);
@@ -110,5 +119,33 @@ public class BookClubPage {
 
     public void leaveClubButtonExistsAssert() {
         $x(leaveClubButton).shouldBe(visible);
+    }
+
+    public void successfulCreateReview(String assessment,
+                                       String readPages,
+                                       String review){
+        $x(createReviewButton).click();
+        enterFieldById("assessment", assessment);
+        enterFieldById("readPages", readPages);
+        enterFieldById("review", review);
+        $x(submitButton).click();
+    }
+
+    public void userClubReviewAssertInCard(String username,
+                                           String readPages,
+                                           String reviewText){
+        verifyReviewInClubCard(username);
+        verifyReviewInClubCard(readPages);
+        verifyReviewInClubCard(reviewText);
+    }
+
+    public void successfulUpdateReview(String assessment,
+                                       String readPages,
+                                       String review){
+        $x(reviewUpdateButtonInClubCard).click();
+        enterFieldById("assessment", assessment);
+        enterFieldById("readPages", readPages);
+        enterFieldById("review", review);
+        $x(submitButton).click();
     }
 }

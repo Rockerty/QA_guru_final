@@ -37,4 +37,21 @@ public class ClubSpec {
             .log(LogDetail.ALL)
             .expectStatusCode(204)
             .build();
+
+    public static ResponseSpecification joinClubResponseSpecification = new ResponseSpecBuilder()
+            .log(LogDetail.ALL)
+            .expectStatusCode(204)
+            .build();
+
+    public static RequestSpecification successfulCreateReviewRequestSpec = with()
+            .filter(withCustomTemplate())
+            .log().method()
+            .log().uri()
+            .log().body()
+            .contentType(JSON);
+
+    public static ResponseSpecification successfulCreateReviewResponseSpec = new ResponseSpecBuilder()
+            .log(LogDetail.ALL)
+            .expectStatusCode(201)
+            .build();
 }

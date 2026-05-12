@@ -1,17 +1,9 @@
 package api.club;
 
-import models.club.CreateClubRequestModel;
-import models.club.GetClubResponseModel;
-import models.club.SuccessfulCreateClubResponseModel;
-import models.club.SuccessfulUpdateClubResponseModel;
-import models.club.UpdateClubRequestModel;
+import models.club.*;
 
 import static io.restassured.RestAssured.given;
-import static specs.club.ClubSpec.clubRequestSpec;
-import static specs.club.ClubSpec.successfulCreateClubResponseSpec;
-import static specs.club.ClubSpec.successfulDeleteClubResponseSpec;
-import static specs.club.ClubSpec.successfulGetClubResponseSpec;
-import static specs.club.ClubSpec.successfulUpdateClubResponseSpec;
+import static specs.club.ClubSpec.*;
 
 public class ClubApiClient {
 
@@ -60,5 +52,26 @@ public class ClubApiClient {
                 .delete("/clubs/" + clubId + "/")
                 .then()
                 .spec(successfulDeleteClubResponseSpec);
+    }
+
+    public void successfulJoinClub (String accessToken, Integer clubId) {
+        given()
+                .spec(clubRequestSpec)
+                .auth().oauth2(accessToken)
+                .when()
+                .post("/clubs/" + clubId + "/members/me/")
+                .then()
+                .spec(joinClubResponseSpecification);
+    }
+
+    public void successfulCreateReview(String accessToken, CreateClubReviewRequestModel createClubReviewRequestModel) {
+        given()
+                .spec(successfulCreateReviewRequestSpec)
+                .auth().oauth2(accessToken)
+                .body(createClubReviewRequestModel)
+                .when()
+                .post("/clubs/reviews/")
+                .then()
+                .spec(successfulCreateReviewResponseSpec);
     }
 }
