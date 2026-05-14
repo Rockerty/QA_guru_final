@@ -4,6 +4,7 @@ import models.login.LoginRequestModel;
 import models.login.SuccessfulLoginResponseModel;
 import models.logout.IncorrectRefreshLogoutResponseModel;
 import models.logout.NoRefreshLogoutResponseModel;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import tests.bookclub.BookClubTestBase;
 
@@ -18,6 +19,7 @@ public class LogoutTests extends BookClubTestBase {
     String password = "qaguru123";
     String emptyToken = "";
 
+    @Tag("dz_19")
     @Test
     public void successfulLogoutTest(){
         LoginRequestModel loginRequestModel = new LoginRequestModel();
@@ -36,6 +38,7 @@ public class LogoutTests extends BookClubTestBase {
         });
     }
 
+    @Tag("dz_19")
     @Test
     public void noTokenLogoutTest(){
         String logoutBody = "{\"refresh\":\"" + emptyToken + "\"}";
@@ -48,6 +51,7 @@ public class LogoutTests extends BookClubTestBase {
         });
     }
 
+    @Tag("dz_19")
     @Test
     public void randomRefreshLogoutTest(){
         String logoutBody = "{\"refresh\":\"" + randomRefresh + "\"}";

@@ -6,6 +6,7 @@ import models.login.LoginRequestModel;
 import models.login.SuccessfulLoginResponseModel;
 import models.registration.RegistrationRequestModel;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import tests.bookclub.BookClubTestBase;
 
@@ -53,6 +54,7 @@ public class CRUDReviewFromApiTests extends BookClubTestBase {
         updatedClubAssessment = faker.number().numberBetween(1, 6);
     }
 
+    @Tag("dz_19")
     @Test
     public void successfulCreateClubReviewTest(){
         step("Регистрация создателя клуба", () -> {
@@ -118,6 +120,7 @@ public class CRUDReviewFromApiTests extends BookClubTestBase {
         });
     }
 
+    @Tag("dz_19")
     @Test
     public void successfulUpdateClubReviewTest(){
         step("Регистрация создателя клуба", () -> {
@@ -189,6 +192,7 @@ public class CRUDReviewFromApiTests extends BookClubTestBase {
         });
     }
 
+    @Tag("dz_19")
     @Test
     public void successfulDeleteClubReviewAsCreatorTest(){
         step("Регистрация создателя клуба", () -> {
@@ -248,6 +252,7 @@ public class CRUDReviewFromApiTests extends BookClubTestBase {
         });
     }
 
+    @Tag("dz_19")
     @Test
     public void deleteClubReviewAsParticipantTest(){
         step("Регистрация создателя клуба и отзыва", () -> {

@@ -8,6 +8,7 @@ import models.login.SuccessfulLoginResponseModel;
 import models.registration.RegistrationRequestModel;
 import models.registration.SuccessfulRegistrationResponseModel;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import pages.BookClubPage;
 import tests.bookclub.BookClubTestBase;
@@ -45,6 +46,7 @@ public class ReadClubUITests extends BookClubTestBase {
         telegramChatLink = "https://t.me/" + username;
     }
 
+    @Tag("dz_19")
     @Test
     public void myClubsTabUITest(){
         step("Регистрация нового пользователя", () -> {
@@ -104,6 +106,7 @@ public class ReadClubUITests extends BookClubTestBase {
         });
     }
 
+    @Tag("dz_19")
     @Test
     public void participateClubsTabUITest(){
         step("Регистрация нового пользователя", () -> {

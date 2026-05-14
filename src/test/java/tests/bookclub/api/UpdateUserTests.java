@@ -8,6 +8,7 @@ import models.update.InvalidEmailUpdateResponseModel;
 import models.update.SuccessfulUpdateResponseModel;
 import models.update.UpdateRequestModel;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import tests.bookclub.BookClubTestBase;
 
@@ -33,6 +34,7 @@ public class UpdateUserTests extends BookClubTestBase {
         email = faker.internet().emailAddress();
     }
 
+    @Tag("dz_19")
     @Test
     public void successfulUpdateUserTest(){
         step("Регистрация нового пользователя", () -> {
@@ -71,6 +73,7 @@ public class UpdateUserTests extends BookClubTestBase {
         });
     }
 
+    @Tag("dz_19")
     @Test
     public void invalidEmailUpdateUserTest() {
         invalidEmail = "isNotEmail";
@@ -110,6 +113,7 @@ public class UpdateUserTests extends BookClubTestBase {
         });
     }
 
+    @Tag("dz_19")
     @Test
     public void nullEmailUpdateUserTest() {
         step("Регистрация нового пользователя", () -> {

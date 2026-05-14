@@ -7,6 +7,7 @@ import models.registration.NoUsernameRegistrationResponseModel;
 import models.registration.RegistrationRequestModel;
 import models.registration.SuccessfulRegistrationResponseModel;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import tests.bookclub.BookClubTestBase;
 
@@ -25,6 +26,7 @@ public class RegistrationTests extends BookClubTestBase {
         password = faker.internet().password();
     }
 
+    @Tag("dz_19")
     @Test
     public void successfulRegistrationTest(){
         RegistrationRequestModel registrationRequestModel = new RegistrationRequestModel();
@@ -38,6 +40,7 @@ public class RegistrationTests extends BookClubTestBase {
         });
     }
 
+    @Tag("dz_19")
     @Test
     public void notUniqUserRegistrationTest(){
         RegistrationRequestModel registrationRequestModel = new RegistrationRequestModel();
@@ -53,6 +56,7 @@ public class RegistrationTests extends BookClubTestBase {
         });
     }
 
+    @Tag("dz_19")
     @Test
     public void noUsernameRegistrationTest(){
         NoUsernameRegistrationRequestModel noUsernameRegistrationRequestModel = new NoUsernameRegistrationRequestModel();

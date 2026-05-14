@@ -4,6 +4,7 @@ import models.login.EmptyCredsLoginResponseModel;
 import models.login.IncorrectLoginResponseModel;
 import models.login.LoginRequestModel;
 import models.login.SuccessfulLoginResponseModel;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import tests.bookclub.BookClubTestBase;
 
@@ -19,6 +20,7 @@ public class LoginTests extends BookClubTestBase {
     String emptyPassword = "";
 
 
+    @Tag("dz_19")
     @Test
     public void successfulLoginTest() {
         LoginRequestModel loginRequestModel = new LoginRequestModel();
@@ -34,6 +36,7 @@ public class LoginTests extends BookClubTestBase {
         });
     }
 
+    @Tag("dz_19")
     @Test
     public void incorrectPasswordLoginTest(){
         LoginRequestModel loginRequestModel = new LoginRequestModel();
@@ -50,6 +53,7 @@ public class LoginTests extends BookClubTestBase {
         });
     }
 
+    @Tag("dz_19")
     @Test
     public void emptyCredsLoginTest(){
         LoginRequestModel loginRequestModel = new LoginRequestModel();

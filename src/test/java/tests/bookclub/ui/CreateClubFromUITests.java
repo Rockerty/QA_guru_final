@@ -6,6 +6,7 @@ import models.login.SuccessfulLoginResponseModel;
 import models.registration.RegistrationRequestModel;
 import models.registration.SuccessfulRegistrationResponseModel;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import pages.BookClubPage;
 import tests.bookclub.BookClubTestBase;
@@ -53,6 +54,7 @@ public class CreateClubFromUITests extends BookClubTestBase {
         requiredTelegramChatLinkMessage = "Ссылка на Telegram чат обязательна";
     }
 
+    @Tag("dz_19")
     @Test
     public void successfulCreateClubFromUITest() {
         step("Регистрация нового пользователя", () -> {
@@ -122,6 +124,7 @@ public class CreateClubFromUITests extends BookClubTestBase {
         });
     }
 
+    @Tag("dz_19")
     @Test
     public void requiredFieldsInCreateFromUITest() {
         step("Регистрация нового пользователя", () -> {
