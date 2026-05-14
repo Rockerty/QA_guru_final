@@ -105,3 +105,12 @@ tasks.register('dz_11', Test) {
         includeTags 'dz_11'
     }
 }
+
+tasks.register('dz_19', Test) {
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+
+    useJUnitPlatform {
+        includeTags 'dz_19'
+    }
+}
