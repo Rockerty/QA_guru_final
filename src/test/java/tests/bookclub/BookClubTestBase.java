@@ -45,6 +45,10 @@ public class BookClubTestBase {
         Configuration.browserVersion = System.getProperty("browserVersion");
         Configuration.pageLoadStrategy = "eager";
         Configuration.timeout = 10000;
+
+//        Configuration.baseUrl = "https://book-club.qa.guru";
+//        Configuration.browserSize = "1920x1080";
+//        Configuration.timeout = 10000;
     }
 
     @AfterEach
