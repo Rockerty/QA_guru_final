@@ -12,6 +12,7 @@ import io.restassured.RestAssured;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import com.codeborne.selenide.WebDriverRunner;
 
 import java.util.Map;
 
@@ -53,14 +54,18 @@ public class BookClubTestBase {
 
     @AfterEach
     void tearDown() {
-        Selenide.closeWebDriver();
+        if (WebDriverRunner.hasWebDriverStarted()) {
+            Selenide.closeWebDriver();
+        }
     }
 
     @AfterEach
     void addAttachment() {
-        Attach.screenshotAs("Last screenshot");
-        Attach.pageSource();
-        Attach.browserConsoleLogs();
-        Attach.addVideo();
+        if (WebDriverRunner.hasWebDriverStarted()) {
+            Attach.screenshotAs("Last screenshot");
+            Attach.pageSource();
+            Attach.browserConsoleLogs();
+            Attach.addVideo();
+        }
     }
 }
