@@ -8,6 +8,7 @@ import io.restassured.specification.ResponseSpecification;
 import static allure.CustomAllureListener.withCustomTemplate;
 import static io.restassured.RestAssured.with;
 import static io.restassured.http.ContentType.JSON;
+import static org.hamcrest.core.IsNull.notNullValue;
 
 public class ClubSpec {
 
@@ -54,4 +55,31 @@ public class ClubSpec {
             .log(LogDetail.ALL)
             .expectStatusCode(201)
             .build();
+    public static ResponseSpecification successfulDeleteReviewResponseSpec = new ResponseSpecBuilder()
+            .log(LogDetail.ALL)
+            .expectStatusCode(204)
+            .build();
+
+    public static ResponseSpecification invalidDeleteReviewResponseSpec = new ResponseSpecBuilder()
+            .log(LogDetail.ALL)
+            .expectStatusCode(403)
+            .expectBody("detail", notNullValue())
+            .build();
+
+    public static ResponseSpecification successfulGetReviewResponseSpec = new ResponseSpecBuilder()
+            .log(LogDetail.ALL)
+            .expectStatusCode(200)
+            .expectBody("id", notNullValue())
+            .expectBody("club", notNullValue())
+            .expectBody("review", notNullValue())
+            .expectBody("assessment", notNullValue())
+            .expectBody("readPages", notNullValue())
+            .build();
+
+    public static RequestSpecification defaultReviewRequestSpec = with()
+            .filter(withCustomTemplate())
+            .log().method()
+            .log().uri()
+            .log().body()
+            .contentType(JSON);
 }

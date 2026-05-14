@@ -64,14 +64,72 @@ public class ClubApiClient {
                 .spec(joinClubResponseSpecification);
     }
 
-    public void successfulCreateReview(String accessToken, CreateClubReviewRequestModel createClubReviewRequestModel) {
-        given()
+    public SuccessfulCreateReviewResponseModel successfulCreateReview(String accessToken, CreateClubReviewRequestModel createClubReviewRequestModel) {
+        return given()
                 .spec(successfulCreateReviewRequestSpec)
                 .auth().oauth2(accessToken)
                 .body(createClubReviewRequestModel)
                 .when()
                 .post("/clubs/reviews/")
                 .then()
-                .spec(successfulCreateReviewResponseSpec);
+                .spec(successfulCreateReviewResponseSpec)
+                .extract()
+                .as(SuccessfulCreateReviewResponseModel.class);
+    }
+
+    public GetReviewResponseModel successfulGetReview(Integer reviewId) {
+        return given()
+                .spec(defaultReviewRequestSpec)
+                .when()
+                .get("/clubs/reviews/" + reviewId + "/")
+                .then()
+                .spec(successfulGetReviewResponseSpec)
+                .extract()
+                .as(GetReviewResponseModel.class);
+    }
+
+    public void SuccessfulUpdateClubReviewRequestModel (String accessToken, Integer reviewId) {
+        given()
+                .spec(clubRequestSpec)
+                .auth().oauth2(accessToken)
+                .when()
+                .put("/clubs/reviews" + reviewId + "/")
+                .then()
+                .spec(joinClubResponseSpecification);
+    }
+
+    public SuccessfulUpdateReviewResponseModel successfulUpdateReviewResponseModel(String accessToken, Integer reviewId, UpdateReviewRequestModel updateReviewRequestModel) {
+        return given()
+                .spec(defaultReviewRequestSpec)
+                .auth().oauth2(accessToken)
+                .body(updateReviewRequestModel)
+                .when()
+                .put("/clubs/reviews/" + reviewId + "/")
+                .then()
+                .spec(successfulGetReviewResponseSpec)
+                .extract()
+                .as(SuccessfulUpdateReviewResponseModel.class);
+    }
+
+    public void SuccessfulDeleteReviewClub(String accessToken, Integer reviewId) {
+        given()
+            .spec(defaultReviewRequestSpec)
+            .auth().oauth2(accessToken)
+            .when()
+            .delete("/clubs/reviews/" + reviewId + "/")
+            .then()
+            .spec(successfulDeleteReviewResponseSpec);
+    }
+
+    public InvalidDeleteReviewResponseModel invalidDeleteReviewClub(String accessToken, Integer reviewId) {
+        return given()
+                .spec(defaultReviewRequestSpec)
+                .auth().oauth2(accessToken)
+                .when()
+                .delete("/clubs/reviews/" + reviewId + "/")
+                .then()
+                .spec(invalidDeleteReviewResponseSpec)
+                .extract()
+                .as(InvalidDeleteReviewResponseModel.class);
     }
 }

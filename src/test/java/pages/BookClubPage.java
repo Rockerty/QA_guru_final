@@ -4,8 +4,7 @@ import com.codeborne.selenide.SelenideElement;
 
 import java.util.List;
 
-import static com.codeborne.selenide.Condition.text;
-import static com.codeborne.selenide.Condition.visible;
+import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
 
 public class BookClubPage {
@@ -24,7 +23,8 @@ public class BookClubPage {
     private static final String createReviewButton = "//*[@class='add-review-btn']";
     private static final String userClubReviewCard = "(//div[@class='review-card user-review'])[1]";
     private static final String reviewUpdateButtonInClubCard = "(//button[contains(@class, 'edit-review-btn')])[1]";
-
+    private static final String reviewDeleteButtonInClubCard = "(//button[contains(@class, 'delete-review-btn')])[1]";
+    private static final String noReviewMessageInClubCard = "*//div[@class='no-reviews']";
 
     //Actions
     public void enterFieldById(String fieldId, String value) {
@@ -147,5 +147,14 @@ public class BookClubPage {
         enterFieldById("readPages", readPages);
         enterFieldById("review", review);
         $x(submitButton).click();
+    }
+
+    public void deleteClubReview() {
+        $x(reviewDeleteButtonInClubCard).click();
+        confirm();
+    }
+
+    public void deleteClubReviewMessageAssert() {
+        $x(noReviewMessageInClubCard).shouldBe(exist);
     }
 }

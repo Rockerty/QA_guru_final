@@ -18,7 +18,7 @@ import static helpers.LocalStorageHelper.buildAuthData;
 import static io.qameta.allure.Allure.step;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class CreateClubReviewTests extends BookClubTestBase {
+public class CreateClubReviewInUiTests extends BookClubTestBase {
     BookClubPage bookClubPage = new BookClubPage();
 
     String username;
@@ -148,7 +148,7 @@ public class CreateClubReviewTests extends BookClubTestBase {
     }
 
     @Test
-    public void successfulUpdateClubReviewFromUITest(){
+    public void successfulUpdateClubReviewTest(){
         step("Регистрация создателя клуба", () -> {
             RegistrationRequestModel registrationRequestModel = new RegistrationRequestModel();
             registrationRequestModel.setUsername(username);
@@ -216,6 +216,78 @@ public class CreateClubReviewTests extends BookClubTestBase {
 
         step("Проверка отзыва в карточке клуба", () -> {
             bookClubPage.userClubReviewAssertInCard(username, updatedReadPages, updatedReviewText);
+        });
+    }
+
+    @Test
+    public void successfulDeleteClubReviewTest(){
+        step("Регистрация создателя клуба", () -> {
+            RegistrationRequestModel registrationRequestModel = new RegistrationRequestModel();
+            registrationRequestModel.setUsername(username);
+            registrationRequestModel.setPassword(password);
+
+            registrationApiClient.successfulRegistration(registrationRequestModel);
+        });
+
+        step("Получение токена созданного пользователя (создателя)", () -> {
+            LoginRequestModel loginRequestModel = new LoginRequestModel();
+            loginRequestModel.setUsername(username);
+            loginRequestModel.setPassword(password);
+
+            SuccessfulLoginResponseModel successfulLoginResponseModel =
+                    loginApiClient.successfulLogin(loginRequestModel);
+
+            creatorAccessToken = successfulLoginResponseModel.getAccess();
+            refreshToken = successfulLoginResponseModel.getRefresh();
+        });
+
+        step("Создание книжного клуба", () -> {
+            CreateClubRequestModel createClubRequestModel = new CreateClubRequestModel();
+            createClubRequestModel.setBookTitle(bookTitle);
+            createClubRequestModel.setBookAuthors(bookAuthors);
+            createClubRequestModel.setPublicationYear(publicationYear);
+            createClubRequestModel.setDescription(description);
+            createClubRequestModel.setTelegramChatLink(telegramChatLink);
+
+            SuccessfulCreateClubResponseModel successfulCreateClubResponseModel =
+                    clubApiClient.successfulCreateClub(creatorAccessToken, createClubRequestModel);
+
+            clubId = successfulCreateClubResponseModel.getId();
+
+            assertEquals(bookTitle, successfulCreateClubResponseModel.getBookTitle());
+            assertEquals(bookAuthors, successfulCreateClubResponseModel.getBookAuthors());
+            assertEquals(publicationYear, successfulCreateClubResponseModel.getPublicationYear());
+            assertEquals(description, successfulCreateClubResponseModel.getDescription());
+            assertEquals(telegramChatLink, successfulCreateClubResponseModel.getTelegramChatLink());
+        });
+
+        step("Создание отзыва о клубе", () -> {
+            CreateClubReviewRequestModel createClubReviewRequestModel = new CreateClubReviewRequestModel();
+            createClubReviewRequestModel.setClub(clubId);
+            createClubReviewRequestModel.setReview(reviewText);
+            createClubReviewRequestModel.setAssessment(Integer.valueOf(clubAssessment));
+            createClubReviewRequestModel.setReadPages(Integer.valueOf(readPages));
+
+            clubApiClient.successfulCreateReview(creatorAccessToken, createClubReviewRequestModel);
+        });
+
+        step("Формирование localStorageData", () -> {
+            localStorageData = buildAuthData(userId, username, creatorAccessToken, refreshToken);
+            System.out.println("localStorageData: " + localStorageData);
+        });
+
+        step("Вход в карточку созданного клуба", () -> {
+            bookClubPage.openFavicon();
+            localStorage().setItem("book_club_auth", localStorageData);
+            open("/clubs/" + clubId);
+        });
+
+        step("Удаление отзыва о клубе", () -> {
+            bookClubPage.deleteClubReview();
+        });
+
+        step("Проверка отображения сообщения Пока нет отзывов...", () -> {
+            bookClubPage.deleteClubReviewMessageAssert();
         });
     }
 }

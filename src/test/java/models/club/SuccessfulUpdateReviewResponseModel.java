@@ -3,7 +3,7 @@ package models.club;
 import lombok.Data;
 
 @Data
-public class SuccessfulCreateReviewResponseModel {
+public class SuccessfulUpdateReviewResponseModel {
     private Integer id;
     private Integer club;
     private User user;
