@@ -9,7 +9,7 @@ public class ClubApiClient {
 
     public SuccessfulCreateClubResponseModel successfulCreateClub(String accessToken, CreateClubRequestModel createClubRequestModel) {
         return given()
-                .spec(clubRequestSpec)
+                .spec(defaultRequestSpec)
                 .auth().oauth2(accessToken)
                 .body(createClubRequestModel)
                 .when()
@@ -22,7 +22,7 @@ public class ClubApiClient {
 
     public GetClubResponseModel successfulGetClub(Integer clubId) {
         return given()
-                .spec(clubRequestSpec)
+                .spec(defaultRequestSpec)
                 .when()
                 .get("/clubs/" + clubId + "/")
                 .then()
@@ -33,7 +33,7 @@ public class ClubApiClient {
 
     public SuccessfulUpdateClubResponseModel successfulUpdateClub(String accessToken, Integer clubId, UpdateClubRequestModel updateClubRequestModel) {
         return given()
-                .spec(clubRequestSpec)
+                .spec(defaultRequestSpec)
                 .auth().oauth2(accessToken)
                 .body(updateClubRequestModel)
                 .when()
@@ -46,7 +46,7 @@ public class ClubApiClient {
 
     public void successfulDeleteClub(String accessToken, Integer clubId) {
         given()
-                .spec(clubRequestSpec)
+                .spec(defaultRequestSpec)
                 .auth().oauth2(accessToken)
                 .when()
                 .delete("/clubs/" + clubId + "/")
@@ -56,7 +56,7 @@ public class ClubApiClient {
 
     public void successfulJoinClub (String accessToken, Integer clubId) {
         given()
-                .spec(clubRequestSpec)
+                .spec(defaultRequestSpec)
                 .auth().oauth2(accessToken)
                 .when()
                 .post("/clubs/" + clubId + "/members/me/")
@@ -66,7 +66,7 @@ public class ClubApiClient {
 
     public SuccessfulCreateReviewResponseModel successfulCreateReview(String accessToken, CreateClubReviewRequestModel createClubReviewRequestModel) {
         return given()
-                .spec(successfulCreateReviewRequestSpec)
+                .spec(defaultRequestSpec)
                 .auth().oauth2(accessToken)
                 .body(createClubReviewRequestModel)
                 .when()
@@ -79,7 +79,7 @@ public class ClubApiClient {
 
     public GetReviewResponseModel successfulGetReview(Integer reviewId) {
         return given()
-                .spec(defaultReviewRequestSpec)
+                .spec(defaultRequestSpec)
                 .when()
                 .get("/clubs/reviews/" + reviewId + "/")
                 .then()
@@ -88,19 +88,9 @@ public class ClubApiClient {
                 .as(GetReviewResponseModel.class);
     }
 
-    public void SuccessfulUpdateClubReviewRequestModel (String accessToken, Integer reviewId) {
-        given()
-                .spec(clubRequestSpec)
-                .auth().oauth2(accessToken)
-                .when()
-                .put("/clubs/reviews" + reviewId + "/")
-                .then()
-                .spec(joinClubResponseSpecification);
-    }
-
-    public SuccessfulUpdateReviewResponseModel successfulUpdateReviewResponseModel(String accessToken, Integer reviewId, UpdateReviewRequestModel updateReviewRequestModel) {
+    public SuccessfulUpdateReviewResponseModel successfulUpdateReview(String accessToken, Integer reviewId, UpdateReviewRequestModel updateReviewRequestModel) {
         return given()
-                .spec(defaultReviewRequestSpec)
+                .spec(defaultRequestSpec)
                 .auth().oauth2(accessToken)
                 .body(updateReviewRequestModel)
                 .when()
@@ -113,7 +103,7 @@ public class ClubApiClient {
 
     public void SuccessfulDeleteReviewClub(String accessToken, Integer reviewId) {
         given()
-            .spec(defaultReviewRequestSpec)
+            .spec(defaultRequestSpec)
             .auth().oauth2(accessToken)
             .when()
             .delete("/clubs/reviews/" + reviewId + "/")
@@ -123,7 +113,7 @@ public class ClubApiClient {
 
     public InvalidDeleteReviewResponseModel invalidDeleteReviewClub(String accessToken, Integer reviewId) {
         return given()
-                .spec(defaultReviewRequestSpec)
+                .spec(defaultRequestSpec)
                 .auth().oauth2(accessToken)
                 .when()
                 .delete("/clubs/reviews/" + reviewId + "/")

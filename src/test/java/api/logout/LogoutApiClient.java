@@ -1,6 +1,7 @@
 package api.logout;
 
 import models.logout.IncorrectRefreshLogoutResponseModel;
+import models.logout.LogoutRequestModel;
 import models.logout.NoRefreshLogoutResponseModel;
 
 import static io.restassured.RestAssured.given;
@@ -9,20 +10,20 @@ import static specs.login.LogoutSpec.*;
 
 public class LogoutApiClient {
 
-    public void successfulLogout(String logoutBody) {
+    public void successfulLogout(LogoutRequestModel logoutRequestModel) {
         given()
                 .spec(defaultRequestSpec)
-                .body(logoutBody)
+                .body(logoutRequestModel)
                 .when()
                 .post("/auth/logout/")
                 .then()
                 .spec(successfulLogoutResponseSpec);
     }
 
-    public NoRefreshLogoutResponseModel noTokenLogout(String logoutBody) {
+    public NoRefreshLogoutResponseModel noTokenLogout(LogoutRequestModel logoutRequestModel) {
         return given()
                 .spec(defaultRequestSpec)
-                .body(logoutBody)
+                .body(logoutRequestModel)
                 .when()
                 .post("/auth/logout/")
                 .then()
@@ -31,10 +32,10 @@ public class LogoutApiClient {
                 .as(NoRefreshLogoutResponseModel.class);
     }
 
-    public IncorrectRefreshLogoutResponseModel randomRefreshLogout(String logoutBody) {
+    public IncorrectRefreshLogoutResponseModel randomRefreshLogout(LogoutRequestModel logoutRequestModel) {
         return given()
                 .spec(defaultRequestSpec)
-                .body(logoutBody)
+                .body(logoutRequestModel)
                 .when()
                 .post("/auth/logout/")
                 .then()

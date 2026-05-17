@@ -182,7 +182,7 @@ public class CRUDReviewFromApiTests extends BookClubTestBase {
             updateReviewRequest.setAssessment(updatedClubAssessment);
             updateReviewRequest.setReadPages(updatedReadPages);
 
-            SuccessfulUpdateReviewResponseModel successfulUpdateReviewResponseModel = clubApiClient.successfulUpdateReviewResponseModel(creatorAccessToken, reviewId, updateReviewRequest);
+            SuccessfulUpdateReviewResponseModel successfulUpdateReviewResponseModel = clubApiClient.successfulUpdateReview(creatorAccessToken, reviewId, updateReviewRequest);
 
             assertEquals(updatedClubAssessment, successfulUpdateReviewResponseModel.getAssessment());
             assertEquals(clubId, successfulUpdateReviewResponseModel.getClub());
@@ -247,9 +247,9 @@ public class CRUDReviewFromApiTests extends BookClubTestBase {
             reviewId = successfulCreateReviewResponseModel.getId();
         });
 
-        step("Удаление отзыва о клубе", () -> {
-            clubApiClient.SuccessfulDeleteReviewClub(creatorAccessToken, reviewId);
-        });
+        step("Удаление отзыва о клубе", () ->
+                clubApiClient.SuccessfulDeleteReviewClub(creatorAccessToken, reviewId)
+        );
     }
 
     @Tag("dz_19")

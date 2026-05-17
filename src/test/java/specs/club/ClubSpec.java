@@ -12,7 +12,7 @@ import static org.hamcrest.core.IsNull.notNullValue;
 
 public class ClubSpec {
 
-    public static RequestSpecification clubRequestSpec = with()
+    public static RequestSpecification defaultRequestSpec = with()
             .filter(withCustomTemplate())
             .log().method()
             .log().uri()
@@ -44,13 +44,6 @@ public class ClubSpec {
             .expectStatusCode(204)
             .build();
 
-    public static RequestSpecification successfulCreateReviewRequestSpec = with()
-            .filter(withCustomTemplate())
-            .log().method()
-            .log().uri()
-            .log().body()
-            .contentType(JSON);
-
     public static ResponseSpecification successfulCreateReviewResponseSpec = new ResponseSpecBuilder()
             .log(LogDetail.ALL)
             .expectStatusCode(201)
@@ -75,11 +68,4 @@ public class ClubSpec {
             .expectBody("assessment", notNullValue())
             .expectBody("readPages", notNullValue())
             .build();
-
-    public static RequestSpecification defaultReviewRequestSpec = with()
-            .filter(withCustomTemplate())
-            .log().method()
-            .log().uri()
-            .log().body()
-            .contentType(JSON);
 }

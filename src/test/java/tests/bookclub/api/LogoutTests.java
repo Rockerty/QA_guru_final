@@ -3,6 +3,7 @@ package tests.bookclub.api;
 import models.login.LoginRequestModel;
 import models.login.SuccessfulLoginResponseModel;
 import models.logout.IncorrectRefreshLogoutResponseModel;
+import models.logout.LogoutRequestModel;
 import models.logout.NoRefreshLogoutResponseModel;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -32,19 +33,21 @@ public class LogoutTests extends BookClubTestBase {
         });
 
         step("Успешный logout", () -> {
-            String logoutBody = "{\"refresh\":\"" + refreshToken + "\"}";
+            LogoutRequestModel logoutRequestModel = new LogoutRequestModel();
+            logoutRequestModel.setRefresh(refreshToken);
 
-            logoutApiClient.successfulLogout(logoutBody);
+            logoutApiClient.successfulLogout(logoutRequestModel);
         });
     }
 
     @Tag("dz_19")
     @Test
     public void noTokenLogoutTest(){
-        String logoutBody = "{\"refresh\":\"" + emptyToken + "\"}";
+        LogoutRequestModel logoutRequestModel = new LogoutRequestModel();
+        logoutRequestModel.setRefresh(emptyToken);
 
         step("logout: токен отсутствует", () -> {
-            NoRefreshLogoutResponseModel noRefreshLogoutResponseModel = logoutApiClient.noTokenLogout(logoutBody);
+            NoRefreshLogoutResponseModel noRefreshLogoutResponseModel = logoutApiClient.noTokenLogout(logoutRequestModel);
 
             String expectedError = "This field may not be blank.";
             assertEquals(expectedError, noRefreshLogoutResponseModel.getRefresh().get(0));
@@ -54,10 +57,12 @@ public class LogoutTests extends BookClubTestBase {
     @Tag("dz_19")
     @Test
     public void randomRefreshLogoutTest(){
-        String logoutBody = "{\"refresh\":\"" + randomRefresh + "\"}";
+        LogoutRequestModel logoutRequestModel = new LogoutRequestModel();
+        logoutRequestModel.setRefresh(randomRefresh);
 
         step("logout: случайный токен", () -> {
-            IncorrectRefreshLogoutResponseModel incorrectRefreshLogoutResponseModel = logoutApiClient.randomRefreshLogout(logoutBody);
+            IncorrectRefreshLogoutResponseModel incorrectRefreshLogoutResponseModel =
+                    logoutApiClient.randomRefreshLogout(logoutRequestModel);
 
             String expectedDetail = "Token is invalid";
             String expectedCode = "token_not_valid";
