@@ -66,26 +66,26 @@ public class CreateClubReviewInUiTests extends BookClubTestBase {
     @Tag("dz_19")
     @Test
     public void successfulCreateClubReviewTest(){
-        step("Регистрация создателя клуба", () -> {
+        {
             RegistrationRequestModel registrationRequestModel = new RegistrationRequestModel();
             registrationRequestModel.setUsername(username);
             registrationRequestModel.setPassword(password);
 
-            registrationApiClient.successfulRegistration(registrationRequestModel);
-        });
+            apiClient.registration.successfulRegistration(registrationRequestModel);
+        }
 
-        creatorAccessToken = step("Получение токена созданного пользователя (создателя)", () -> {
+        {
             LoginRequestModel loginRequestModel = new LoginRequestModel();
             loginRequestModel.setUsername(username);
             loginRequestModel.setPassword(password);
 
             SuccessfulLoginResponseModel successfulLoginResponseModel =
-                    loginApiClient.successfulLogin(loginRequestModel);
+                    apiClient.login.successfulLogin(loginRequestModel);
 
-            return successfulLoginResponseModel.getAccess();
-        });
+            creatorAccessToken = successfulLoginResponseModel.getAccess();
+        }
 
-        step("Создание книжного клуба", () -> {
+        {
             CreateClubRequestModel createClubRequestModel = new CreateClubRequestModel();
             createClubRequestModel.setBookTitle(bookTitle);
             createClubRequestModel.setBookAuthors(bookAuthors);
@@ -94,7 +94,7 @@ public class CreateClubReviewInUiTests extends BookClubTestBase {
             createClubRequestModel.setTelegramChatLink(telegramChatLink);
 
             SuccessfulCreateClubResponseModel successfulCreateClubResponseModel =
-                    clubApiClient.successfulCreateClub(creatorAccessToken, createClubRequestModel);
+                    apiClient.club.successfulCreateClub(creatorAccessToken, createClubRequestModel);
 
             clubId = successfulCreateClubResponseModel.getId();
 
@@ -103,36 +103,36 @@ public class CreateClubReviewInUiTests extends BookClubTestBase {
             assertEquals(publicationYear, successfulCreateClubResponseModel.getPublicationYear());
             assertEquals(description, successfulCreateClubResponseModel.getDescription());
             assertEquals(telegramChatLink, successfulCreateClubResponseModel.getTelegramChatLink());
-        });
+        }
 
-        step("Регистрация ревьюера", () -> {
+        {
             RegistrationRequestModel registrationRequestModel = new RegistrationRequestModel();
             registrationRequestModel.setUsername(secondUsername);
             registrationRequestModel.setPassword(password);
 
-            registrationApiClient.successfulRegistration(registrationRequestModel);
-        });
+            apiClient.registration.successfulRegistration(registrationRequestModel);
+        }
 
-        step("Получение токена созданного пользователя (ревьюера)", () -> {
+        {
             LoginRequestModel loginRequestModel = new LoginRequestModel();
             loginRequestModel.setUsername(secondUsername);
             loginRequestModel.setPassword(password);
 
             SuccessfulLoginResponseModel successfulLoginResponseModel =
-                    loginApiClient.successfulLogin(loginRequestModel);
+                    apiClient.login.successfulLogin(loginRequestModel);
 
             reviewerAccessToken = successfulLoginResponseModel.getAccess();
             refreshToken = successfulLoginResponseModel.getRefresh();
-        });
+        }
 
         step("Формирование localStorageData", () -> {
             localStorageData = buildAuthData(userId, username, reviewerAccessToken, refreshToken);
             System.out.println("localStorageData: " + localStorageData);
         });
 
-        step("Присоединение к клубу", () -> {
-            clubApiClient.successfulJoinClub(reviewerAccessToken, clubId);
-        });
+        {
+            apiClient.club.successfulJoinClub(reviewerAccessToken, clubId);
+        }
 
         step("Вход в карточку созданного клуба", () -> {
             bookClubPage.openFavicon();
@@ -152,27 +152,27 @@ public class CreateClubReviewInUiTests extends BookClubTestBase {
     @Tag("dz_19")
     @Test
     public void successfulUpdateClubReviewTest(){
-        step("Регистрация создателя клуба", () -> {
+        {
             RegistrationRequestModel registrationRequestModel = new RegistrationRequestModel();
             registrationRequestModel.setUsername(username);
             registrationRequestModel.setPassword(password);
 
-            registrationApiClient.successfulRegistration(registrationRequestModel);
-        });
+            apiClient.registration.successfulRegistration(registrationRequestModel);
+        }
 
-        step("Получение токена созданного пользователя (создателя)", () -> {
+        {
             LoginRequestModel loginRequestModel = new LoginRequestModel();
             loginRequestModel.setUsername(username);
             loginRequestModel.setPassword(password);
 
             SuccessfulLoginResponseModel successfulLoginResponseModel =
-                    loginApiClient.successfulLogin(loginRequestModel);
+                    apiClient.login.successfulLogin(loginRequestModel);
 
             creatorAccessToken = successfulLoginResponseModel.getAccess();
             refreshToken = successfulLoginResponseModel.getRefresh();
-        });
+        }
 
-        step("Создание книжного клуба", () -> {
+        {
             CreateClubRequestModel createClubRequestModel = new CreateClubRequestModel();
             createClubRequestModel.setBookTitle(bookTitle);
             createClubRequestModel.setBookAuthors(bookAuthors);
@@ -181,7 +181,7 @@ public class CreateClubReviewInUiTests extends BookClubTestBase {
             createClubRequestModel.setTelegramChatLink(telegramChatLink);
 
             SuccessfulCreateClubResponseModel successfulCreateClubResponseModel =
-                    clubApiClient.successfulCreateClub(creatorAccessToken, createClubRequestModel);
+                    apiClient.club.successfulCreateClub(creatorAccessToken, createClubRequestModel);
 
             clubId = successfulCreateClubResponseModel.getId();
 
@@ -190,17 +190,17 @@ public class CreateClubReviewInUiTests extends BookClubTestBase {
             assertEquals(publicationYear, successfulCreateClubResponseModel.getPublicationYear());
             assertEquals(description, successfulCreateClubResponseModel.getDescription());
             assertEquals(telegramChatLink, successfulCreateClubResponseModel.getTelegramChatLink());
-        });
+        }
 
-        step("Создание отзыва о клубе", () -> {
+        {
             CreateClubReviewRequestModel createClubReviewRequestModel = new CreateClubReviewRequestModel();
             createClubReviewRequestModel.setClub(clubId);
             createClubReviewRequestModel.setReview(reviewText);
             createClubReviewRequestModel.setAssessment(Integer.valueOf(clubAssessment));
             createClubReviewRequestModel.setReadPages(Integer.valueOf(readPages));
 
-            clubApiClient.successfulCreateReview(creatorAccessToken, createClubReviewRequestModel);
-        });
+            apiClient.club.successfulCreateReview(creatorAccessToken, createClubReviewRequestModel);
+        }
 
         step("Формирование localStorageData", () -> {
             localStorageData = buildAuthData(userId, username, creatorAccessToken, refreshToken);
@@ -225,27 +225,27 @@ public class CreateClubReviewInUiTests extends BookClubTestBase {
     @Tag("dz_19")
     @Test
     public void successfulDeleteClubReviewTest(){
-        step("Регистрация создателя клуба", () -> {
+        {
             RegistrationRequestModel registrationRequestModel = new RegistrationRequestModel();
             registrationRequestModel.setUsername(username);
             registrationRequestModel.setPassword(password);
 
-            registrationApiClient.successfulRegistration(registrationRequestModel);
-        });
+            apiClient.registration.successfulRegistration(registrationRequestModel);
+        }
 
-        step("Получение токена созданного пользователя (создателя)", () -> {
+        {
             LoginRequestModel loginRequestModel = new LoginRequestModel();
             loginRequestModel.setUsername(username);
             loginRequestModel.setPassword(password);
 
             SuccessfulLoginResponseModel successfulLoginResponseModel =
-                    loginApiClient.successfulLogin(loginRequestModel);
+                    apiClient.login.successfulLogin(loginRequestModel);
 
             creatorAccessToken = successfulLoginResponseModel.getAccess();
             refreshToken = successfulLoginResponseModel.getRefresh();
-        });
+        }
 
-        step("Создание книжного клуба", () -> {
+        {
             CreateClubRequestModel createClubRequestModel = new CreateClubRequestModel();
             createClubRequestModel.setBookTitle(bookTitle);
             createClubRequestModel.setBookAuthors(bookAuthors);
@@ -254,7 +254,7 @@ public class CreateClubReviewInUiTests extends BookClubTestBase {
             createClubRequestModel.setTelegramChatLink(telegramChatLink);
 
             SuccessfulCreateClubResponseModel successfulCreateClubResponseModel =
-                    clubApiClient.successfulCreateClub(creatorAccessToken, createClubRequestModel);
+                    apiClient.club.successfulCreateClub(creatorAccessToken, createClubRequestModel);
 
             clubId = successfulCreateClubResponseModel.getId();
 
@@ -263,17 +263,17 @@ public class CreateClubReviewInUiTests extends BookClubTestBase {
             assertEquals(publicationYear, successfulCreateClubResponseModel.getPublicationYear());
             assertEquals(description, successfulCreateClubResponseModel.getDescription());
             assertEquals(telegramChatLink, successfulCreateClubResponseModel.getTelegramChatLink());
-        });
+        }
 
-        step("Создание отзыва о клубе", () -> {
+        {
             CreateClubReviewRequestModel createClubReviewRequestModel = new CreateClubReviewRequestModel();
             createClubReviewRequestModel.setClub(clubId);
             createClubReviewRequestModel.setReview(reviewText);
             createClubReviewRequestModel.setAssessment(Integer.valueOf(clubAssessment));
             createClubReviewRequestModel.setReadPages(Integer.valueOf(readPages));
 
-            clubApiClient.successfulCreateReview(creatorAccessToken, createClubReviewRequestModel);
-        });
+            apiClient.club.successfulCreateReview(creatorAccessToken, createClubReviewRequestModel);
+        }
 
         step("Формирование localStorageData", () -> {
             localStorageData = buildAuthData(userId, username, creatorAccessToken, refreshToken);

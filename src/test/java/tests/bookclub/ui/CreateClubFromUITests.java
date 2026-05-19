@@ -57,26 +57,26 @@ public class CreateClubFromUITests extends BookClubTestBase {
     @Tag("dz_19")
     @Test
     public void successfulCreateClubFromUITest() {
-        step("Регистрация нового пользователя", () -> {
+        {
             RegistrationRequestModel registrationRequestModel = new RegistrationRequestModel();
             registrationRequestModel.setUsername(username);
             registrationRequestModel.setPassword(password);
 
-            SuccessfulRegistrationResponseModel successfulRegistrationResponse = registrationApiClient.successfulRegistration(registrationRequestModel);
+            SuccessfulRegistrationResponseModel successfulRegistrationResponse = apiClient.registration.successfulRegistration(registrationRequestModel);
 
             userId = successfulRegistrationResponse.getId().toString();
-        });
+        }
 
-        step("Получение токенов созданного пользователя", () -> {
+        {
             LoginRequestModel loginRequestModel = new LoginRequestModel();
             loginRequestModel.setUsername(username);
             loginRequestModel.setPassword(password);
 
-            SuccessfulLoginResponseModel successfulLoginResponseModel = loginApiClient.successfulLogin(loginRequestModel);
+            SuccessfulLoginResponseModel successfulLoginResponseModel = apiClient.login.successfulLogin(loginRequestModel);
 
             accessToken = successfulLoginResponseModel.getAccess();
             refreshToken = successfulLoginResponseModel.getRefresh();
-        });
+        }
 
 
         step("Формирование localStorageData", () -> {
@@ -127,26 +127,26 @@ public class CreateClubFromUITests extends BookClubTestBase {
     @Tag("dz_19")
     @Test
     public void requiredFieldsInCreateFromUITest() {
-        step("Регистрация нового пользователя", () -> {
+        {
             RegistrationRequestModel registrationRequestModel = new RegistrationRequestModel();
             registrationRequestModel.setUsername(username);
             registrationRequestModel.setPassword(password);
 
-            SuccessfulRegistrationResponseModel successfulRegistrationResponse = registrationApiClient.successfulRegistration(registrationRequestModel);
+            SuccessfulRegistrationResponseModel successfulRegistrationResponse = apiClient.registration.successfulRegistration(registrationRequestModel);
 
             userId = successfulRegistrationResponse.getId().toString();
-        });
+        }
 
-        step("Получение токенов созданного пользователя", () -> {
+        {
             LoginRequestModel loginRequestModel = new LoginRequestModel();
             loginRequestModel.setUsername(username);
             loginRequestModel.setPassword(password);
 
-            SuccessfulLoginResponseModel successfulLoginResponseModel = loginApiClient.successfulLogin(loginRequestModel);
+            SuccessfulLoginResponseModel successfulLoginResponseModel = apiClient.login.successfulLogin(loginRequestModel);
 
             accessToken = successfulLoginResponseModel.getAccess();
             refreshToken = successfulLoginResponseModel.getRefresh();
-        });
+        }
 
 
         step("Формирование localStorageData", () -> {

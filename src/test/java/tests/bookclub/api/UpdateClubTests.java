@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import tests.bookclub.BookClubTestBase;
 
-import static io.qameta.allure.Allure.step;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class UpdateClubTests extends BookClubTestBase {
@@ -50,26 +49,28 @@ public class UpdateClubTests extends BookClubTestBase {
     @Tag("dz_19")
     @Test
     public void successfulUpdateClubTest(){
-        step("Регистрация нового пользователя", () -> {
+        {
             RegistrationRequestModel registrationRequestModel = new RegistrationRequestModel();
             registrationRequestModel.setUsername(username);
             registrationRequestModel.setPassword(password);
 
-            registrationApiClient.successfulRegistration(registrationRequestModel);
-        });
+            apiClient.registration.successfulRegistration(registrationRequestModel);
+        }
 
-        String accessToken = step("Получение токена созданного пользователя", () -> {
+        String accessToken;
+        {
             LoginRequestModel loginRequestModel = new LoginRequestModel();
             loginRequestModel.setUsername(username);
             loginRequestModel.setPassword(password);
 
             SuccessfulLoginResponseModel successfulLoginResponseModel =
-                    loginApiClient.successfulLogin(loginRequestModel);
+                    apiClient.login.successfulLogin(loginRequestModel);
 
-            return successfulLoginResponseModel.getAccess();
-        });
+            accessToken = successfulLoginResponseModel.getAccess();
+        }
 
-        Integer clubId = step("Создание книжного клуба", () -> {
+        Integer clubId;
+        {
             CreateClubRequestModel createClubRequestModel = new CreateClubRequestModel();
             createClubRequestModel.setBookTitle(bookTitle);
             createClubRequestModel.setBookAuthors(bookAuthors);
@@ -78,12 +79,12 @@ public class UpdateClubTests extends BookClubTestBase {
             createClubRequestModel.setTelegramChatLink(telegramChatLink);
 
             SuccessfulCreateClubResponseModel successfulCreateClubResponseModel =
-                    clubApiClient.successfulCreateClub(accessToken, createClubRequestModel);
+                    apiClient.club.successfulCreateClub(accessToken, createClubRequestModel);
 
-            return successfulCreateClubResponseModel.getId();
-        });
+            clubId = successfulCreateClubResponseModel.getId();
+        }
 
-        step("Редактирование книжного клуба", () -> {
+        {
             UpdateClubRequestModel updateClubRequestModel = new UpdateClubRequestModel();
             updateClubRequestModel.setBookTitle(updatedBookTitle);
             updateClubRequestModel.setBookAuthors(updatedBookAuthors);
@@ -92,13 +93,13 @@ public class UpdateClubTests extends BookClubTestBase {
             updateClubRequestModel.setTelegramChatLink(updatedTelegramChatLink);
 
             SuccessfulUpdateClubResponseModel successfulUpdateClubResponseModel =
-                    clubApiClient.successfulUpdateClub(accessToken, clubId, updateClubRequestModel);
+                    apiClient.club.successfulUpdateClub(accessToken, clubId, updateClubRequestModel);
 
             assertEquals(updatedBookTitle, successfulUpdateClubResponseModel.getBookTitle());
             assertEquals(updatedBookAuthors, successfulUpdateClubResponseModel.getBookAuthors());
             assertEquals(updatedPublicationYear, successfulUpdateClubResponseModel.getPublicationYear());
             assertEquals(updatedDescription, successfulUpdateClubResponseModel.getDescription());
             assertEquals(updatedTelegramChatLink, successfulUpdateClubResponseModel.getTelegramChatLink());
-        });
+        }
     }
 }

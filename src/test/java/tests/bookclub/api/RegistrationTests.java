@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import tests.bookclub.BookClubTestBase;
 
-import static io.qameta.allure.Allure.step;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class RegistrationTests extends BookClubTestBase {
@@ -33,11 +32,11 @@ public class RegistrationTests extends BookClubTestBase {
         registrationRequestModel.setUsername(username);
         registrationRequestModel.setPassword(password);
 
-        step("Успешная регистрация", () -> {
-            SuccessfulRegistrationResponseModel successfulRegistrationResponse = registrationApiClient.successfulRegistration(registrationRequestModel);
+        {
+            SuccessfulRegistrationResponseModel successfulRegistrationResponse = apiClient.registration.successfulRegistration(registrationRequestModel);
 
             assertEquals(username, successfulRegistrationResponse.getUsername());
-        });
+        }
     }
 
     @Tag("dz_19")
@@ -47,13 +46,13 @@ public class RegistrationTests extends BookClubTestBase {
         registrationRequestModel.setUsername("Racquel");
         registrationRequestModel.setPassword("Siobhan");
 
-        step("Регистрация: пользователь уже существует", () -> {
-            Response notUniqUserRegistrationResponse = registrationApiClient.notUniqUserRegistration(registrationRequestModel);
+        {
+            Response notUniqUserRegistrationResponse = apiClient.registration.notUniqUserRegistration(registrationRequestModel);
 
             String expectedError = "A user with that username already exists.";
 
             assertEquals(expectedError, notUniqUserRegistrationResponse.path("username[0]"));
-        });
+        }
     }
 
     @Tag("dz_19")
@@ -62,12 +61,12 @@ public class RegistrationTests extends BookClubTestBase {
         NoUsernameRegistrationRequestModel noUsernameRegistrationRequestModel = new NoUsernameRegistrationRequestModel();
         noUsernameRegistrationRequestModel.setPassword(password);
 
-        step("Регистрация: имя пользователя отсутствует", () -> {
-            NoUsernameRegistrationResponseModel noUsernameRegistrationResponseModel = registrationApiClient.noUsernameRegistration(noUsernameRegistrationRequestModel);
+        {
+            NoUsernameRegistrationResponseModel noUsernameRegistrationResponseModel = apiClient.registration.noUsernameRegistration(noUsernameRegistrationRequestModel);
 
             String expectedError = "This field is required.";
 
             assertEquals(expectedError, noUsernameRegistrationResponseModel.getUsername().get(0));
-        });
+        }
     }
 }

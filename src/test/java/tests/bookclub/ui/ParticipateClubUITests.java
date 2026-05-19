@@ -51,26 +51,26 @@ public class ParticipateClubUITests extends BookClubTestBase {
     @Tag("dz_19")
     @Test
     public void leaveMyClubTest(){
-        step("Регистрация нового пользователя", () -> {
+        {
             RegistrationRequestModel registrationRequestModel = new RegistrationRequestModel();
             registrationRequestModel.setUsername(username);
             registrationRequestModel.setPassword(password);
 
-            registrationApiClient.successfulRegistration(registrationRequestModel);
-        });
+            apiClient.registration.successfulRegistration(registrationRequestModel);
+        }
 
-        step("Получение токенов созданного пользователя", () -> {
+        {
             LoginRequestModel loginRequestModel = new LoginRequestModel();
             loginRequestModel.setUsername(username);
             loginRequestModel.setPassword(password);
 
-            SuccessfulLoginResponseModel successfulLoginResponseModel = loginApiClient.successfulLogin(loginRequestModel);
+            SuccessfulLoginResponseModel successfulLoginResponseModel = apiClient.login.successfulLogin(loginRequestModel);
 
             accessToken = successfulLoginResponseModel.getAccess();
             refreshToken = successfulLoginResponseModel.getRefresh();
-        });
+        }
 
-        step("Создание книжного клуба", () -> {
+        {
             CreateClubRequestModel createClubRequestModel = new CreateClubRequestModel();
             createClubRequestModel.setBookTitle(bookTitle);
             createClubRequestModel.setBookAuthors(bookAuthors);
@@ -79,7 +79,7 @@ public class ParticipateClubUITests extends BookClubTestBase {
             createClubRequestModel.setTelegramChatLink(telegramChatLink);
 
             SuccessfulCreateClubResponseModel successfulCreateClubResponseModel =
-                    clubApiClient.successfulCreateClub(accessToken, createClubRequestModel);
+                    apiClient.club.successfulCreateClub(accessToken, createClubRequestModel);
 
             clubId = successfulCreateClubResponseModel.getId();
 
@@ -88,7 +88,7 @@ public class ParticipateClubUITests extends BookClubTestBase {
             assertEquals(publicationYear, successfulCreateClubResponseModel.getPublicationYear());
             assertEquals(description, successfulCreateClubResponseModel.getDescription());
             assertEquals(telegramChatLink, successfulCreateClubResponseModel.getTelegramChatLink());
-        });
+        }
 
         step("Формирование localStorageData", () -> {
             localStorageData = buildAuthData(userId, username, accessToken, refreshToken);
@@ -112,26 +112,26 @@ public class ParticipateClubUITests extends BookClubTestBase {
     @Tag("dz_19")
     @Test
     public void joinClubTest(){
-        step("Регистрация первого пользователя", () -> {
+        {
             RegistrationRequestModel registrationRequestModel = new RegistrationRequestModel();
             registrationRequestModel.setUsername(username);
             registrationRequestModel.setPassword(password);
 
-            registrationApiClient.successfulRegistration(registrationRequestModel);
-        });
+            apiClient.registration.successfulRegistration(registrationRequestModel);
+        }
 
-        step("Получение токенов созданного пользователя", () -> {
+        {
             LoginRequestModel loginRequestModel = new LoginRequestModel();
             loginRequestModel.setUsername(username);
             loginRequestModel.setPassword(password);
 
-            SuccessfulLoginResponseModel successfulLoginResponseModel = loginApiClient.successfulLogin(loginRequestModel);
+            SuccessfulLoginResponseModel successfulLoginResponseModel = apiClient.login.successfulLogin(loginRequestModel);
 
             accessToken = successfulLoginResponseModel.getAccess();
             refreshToken = successfulLoginResponseModel.getRefresh();
-        });
+        }
 
-        step("Создание книжного клуба", () -> {
+        {
             CreateClubRequestModel createClubRequestModel = new CreateClubRequestModel();
             createClubRequestModel.setBookTitle(bookTitle);
             createClubRequestModel.setBookAuthors(bookAuthors);
@@ -140,7 +140,7 @@ public class ParticipateClubUITests extends BookClubTestBase {
             createClubRequestModel.setTelegramChatLink(telegramChatLink);
 
             SuccessfulCreateClubResponseModel successfulCreateClubResponseModel =
-                    clubApiClient.successfulCreateClub(accessToken, createClubRequestModel);
+                    apiClient.club.successfulCreateClub(accessToken, createClubRequestModel);
 
             clubId = successfulCreateClubResponseModel.getId();
 
@@ -149,26 +149,26 @@ public class ParticipateClubUITests extends BookClubTestBase {
             assertEquals(publicationYear, successfulCreateClubResponseModel.getPublicationYear());
             assertEquals(description, successfulCreateClubResponseModel.getDescription());
             assertEquals(telegramChatLink, successfulCreateClubResponseModel.getTelegramChatLink());
-        });
+        }
 
-        step("Регистрация второго пользователя", () -> {
+        {
             RegistrationRequestModel registrationRequestModel = new RegistrationRequestModel();
             registrationRequestModel.setUsername(secondUsername);
             registrationRequestModel.setPassword(password);
 
-            registrationApiClient.successfulRegistration(registrationRequestModel);
-        });
+            apiClient.registration.successfulRegistration(registrationRequestModel);
+        }
 
-        step("Получение токенов созданного пользователя", () -> {
+        {
             LoginRequestModel loginRequestModel = new LoginRequestModel();
             loginRequestModel.setUsername(secondUsername);
             loginRequestModel.setPassword(password);
 
-            SuccessfulLoginResponseModel successfulLoginResponseModel = loginApiClient.successfulLogin(loginRequestModel);
+            SuccessfulLoginResponseModel successfulLoginResponseModel = apiClient.login.successfulLogin(loginRequestModel);
 
             accessToken = successfulLoginResponseModel.getAccess();
             refreshToken = successfulLoginResponseModel.getRefresh();
-        });
+        }
 
         step("Формирование localStorageData", () -> {
             localStorageData = buildAuthData(userId, username, accessToken, refreshToken);

@@ -9,9 +9,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import tests.bookclub.BookClubTestBase;
 
-import static io.qameta.allure.Allure.step;
 import static testdata.TestData.*;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class LogoutTests extends BookClubTestBase {
@@ -22,53 +20,45 @@ public class LogoutTests extends BookClubTestBase {
 
     @Tag("dz_19")
     @Test
-    public void successfulLogoutTest(){
+    public void successfulLogoutTest() {
         LoginRequestModel loginRequestModel = new LoginRequestModel();
         loginRequestModel.setUsername(username);
         loginRequestModel.setPassword(password);
 
-        String refreshToken = step("Авторизация и получение токена", () -> {
-            SuccessfulLoginResponseModel successfulLoginResponseModel = loginApiClient.successfulLogin(loginRequestModel);
-            return successfulLoginResponseModel.getRefresh();
-        });
+        SuccessfulLoginResponseModel successfulLoginResponseModel = apiClient.login.successfulLogin(loginRequestModel);
+        String refreshToken = successfulLoginResponseModel.getRefresh();
 
-        step("Успешный logout", () -> {
-            LogoutRequestModel logoutRequestModel = new LogoutRequestModel();
-            logoutRequestModel.setRefresh(refreshToken);
+        LogoutRequestModel logoutRequestModel = new LogoutRequestModel();
+        logoutRequestModel.setRefresh(refreshToken);
 
-            logoutApiClient.successfulLogout(logoutRequestModel);
-        });
+        apiClient.logout.successfulLogout(logoutRequestModel);
     }
 
     @Tag("dz_19")
     @Test
-    public void noTokenLogoutTest(){
+    public void noTokenLogoutTest() {
         LogoutRequestModel logoutRequestModel = new LogoutRequestModel();
         logoutRequestModel.setRefresh(emptyToken);
 
-        step("logout: токен отсутствует", () -> {
-            NoRefreshLogoutResponseModel noRefreshLogoutResponseModel = logoutApiClient.noTokenLogout(logoutRequestModel);
+        NoRefreshLogoutResponseModel noRefreshLogoutResponseModel = apiClient.logout.noTokenLogout(logoutRequestModel);
 
-            String expectedError = "This field may not be blank.";
-            assertEquals(expectedError, noRefreshLogoutResponseModel.getRefresh().get(0));
-        });
+        String expectedError = "This field may not be blank.";
+        assertEquals(expectedError, noRefreshLogoutResponseModel.getRefresh().get(0));
     }
 
     @Tag("dz_19")
     @Test
-    public void randomRefreshLogoutTest(){
+    public void randomRefreshLogoutTest() {
         LogoutRequestModel logoutRequestModel = new LogoutRequestModel();
         logoutRequestModel.setRefresh(randomRefresh);
 
-        step("logout: случайный токен", () -> {
-            IncorrectRefreshLogoutResponseModel incorrectRefreshLogoutResponseModel =
-                    logoutApiClient.randomRefreshLogout(logoutRequestModel);
+        IncorrectRefreshLogoutResponseModel incorrectRefreshLogoutResponseModel =
+                apiClient.logout.randomRefreshLogout(logoutRequestModel);
 
-            String expectedDetail = "Token is invalid";
-            String expectedCode = "token_not_valid";
+        String expectedDetail = "Token is invalid";
+        String expectedCode = "token_not_valid";
 
-            assertEquals(expectedDetail, incorrectRefreshLogoutResponseModel.getDetail());
-            assertEquals(expectedCode, incorrectRefreshLogoutResponseModel.getCode());
-        });
+        assertEquals(expectedDetail, incorrectRefreshLogoutResponseModel.getDetail());
+        assertEquals(expectedCode, incorrectRefreshLogoutResponseModel.getCode());
     }
 }

@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import tests.bookclub.BookClubTestBase;
 
-import static io.qameta.allure.Allure.step;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CRUDReviewFromApiTests extends BookClubTestBase {
@@ -57,27 +56,27 @@ public class CRUDReviewFromApiTests extends BookClubTestBase {
     @Tag("dz_19")
     @Test
     public void successfulCreateClubReviewTest(){
-        step("Регистрация создателя клуба", () -> {
+        {
             RegistrationRequestModel registrationRequestModel = new RegistrationRequestModel();
             registrationRequestModel.setUsername(creatorUsername);
             registrationRequestModel.setPassword(password);
 
-            registrationApiClient.successfulRegistration(registrationRequestModel);
-        });
+            apiClient.registration.successfulRegistration(registrationRequestModel);
+        }
 
-        step("Получение токена созданного пользователя (создателя)", () -> {
+        {
             LoginRequestModel loginRequestModel = new LoginRequestModel();
             loginRequestModel.setUsername(creatorUsername);
             loginRequestModel.setPassword(password);
 
             SuccessfulLoginResponseModel successfulLoginResponseModel =
-                    loginApiClient.successfulLogin(loginRequestModel);
+                    apiClient.login.successfulLogin(loginRequestModel);
 
             creatorAccessToken = successfulLoginResponseModel.getAccess();
             creatorRefreshToken = successfulLoginResponseModel.getRefresh();
-        });
+        }
 
-        step("Создание книжного клуба", () -> {
+        {
             CreateClubRequestModel createClubRequest = new CreateClubRequestModel();
             createClubRequest.setBookTitle(bookTitle);
             createClubRequest.setBookAuthors(bookAuthors);
@@ -86,7 +85,7 @@ public class CRUDReviewFromApiTests extends BookClubTestBase {
             createClubRequest.setTelegramChatLink(telegramChatLink);
 
             SuccessfulCreateClubResponseModel successfulCreateClubResponseModel =
-                    clubApiClient.successfulCreateClub(creatorAccessToken, createClubRequest);
+                    apiClient.club.successfulCreateClub(creatorAccessToken, createClubRequest);
 
             clubId = successfulCreateClubResponseModel.getId();
 
@@ -95,55 +94,54 @@ public class CRUDReviewFromApiTests extends BookClubTestBase {
             assertEquals(publicationYear, successfulCreateClubResponseModel.getPublicationYear());
             assertEquals(description, successfulCreateClubResponseModel.getDescription());
             assertEquals(telegramChatLink, successfulCreateClubResponseModel.getTelegramChatLink());
-        });
+        }
 
-        step("Создание отзыва о клубе", () -> {
+        {
             CreateClubReviewRequestModel createClubReviewRequest = new CreateClubReviewRequestModel();
             createClubReviewRequest.setClub(clubId);
             createClubReviewRequest.setReview(reviewText);
             createClubReviewRequest.setAssessment(clubAssessment);
             createClubReviewRequest.setReadPages(readPages);
 
-            SuccessfulCreateReviewResponseModel successfulCreateReviewResponseModel = clubApiClient.successfulCreateReview(creatorAccessToken, createClubReviewRequest);
+            SuccessfulCreateReviewResponseModel successfulCreateReviewResponseModel = apiClient.club.successfulCreateReview(creatorAccessToken, createClubReviewRequest);
 
             reviewId = successfulCreateReviewResponseModel.getId();
-        });
+        }
 
-        step("Чтение отзыва клуба", () -> {
-            GetReviewResponseModel getReviewResponse = clubApiClient.successfulGetReview(reviewId);
+            GetReviewResponseModel getReviewResponse = apiClient.club.successfulGetReview(reviewId);
 
             assertEquals(clubAssessment, getReviewResponse.getAssessment());
             assertEquals(clubId, getReviewResponse.getClub());
             assertEquals(creatorUsername, getReviewResponse.getUser().getUsername());
             assertEquals(reviewText, getReviewResponse.getReview());
             assertEquals(readPages, getReviewResponse.getReadPages());
-        });
+
     }
 
     @Tag("dz_19")
     @Test
     public void successfulUpdateClubReviewTest(){
-        step("Регистрация создателя клуба", () -> {
+        {
             RegistrationRequestModel registrationRequest = new RegistrationRequestModel();
             registrationRequest.setUsername(creatorUsername);
             registrationRequest.setPassword(password);
 
-            registrationApiClient.successfulRegistration(registrationRequest);
-        });
+            apiClient.registration.successfulRegistration(registrationRequest);
+        }
 
-        step("Получение токена созданного пользователя (создателя)", () -> {
+        {
             LoginRequestModel loginRequest = new LoginRequestModel();
             loginRequest.setUsername(creatorUsername);
             loginRequest.setPassword(password);
 
             SuccessfulLoginResponseModel successfulLoginResponseModel =
-                    loginApiClient.successfulLogin(loginRequest);
+                    apiClient.login.successfulLogin(loginRequest);
 
             creatorAccessToken = successfulLoginResponseModel.getAccess();
             creatorRefreshToken = successfulLoginResponseModel.getRefresh();
-        });
+        }
 
-        step("Создание книжного клуба", () -> {
+        {
             CreateClubRequestModel createClubRequest = new CreateClubRequestModel();
             createClubRequest.setBookTitle(bookTitle);
             createClubRequest.setBookAuthors(bookAuthors);
@@ -152,7 +150,7 @@ public class CRUDReviewFromApiTests extends BookClubTestBase {
             createClubRequest.setTelegramChatLink(telegramChatLink);
 
             SuccessfulCreateClubResponseModel successfulCreateClubResponseModel =
-                    clubApiClient.successfulCreateClub(creatorAccessToken, createClubRequest);
+                    apiClient.club.successfulCreateClub(creatorAccessToken, createClubRequest);
 
             clubId = successfulCreateClubResponseModel.getId();
 
@@ -161,61 +159,61 @@ public class CRUDReviewFromApiTests extends BookClubTestBase {
             assertEquals(publicationYear, successfulCreateClubResponseModel.getPublicationYear());
             assertEquals(description, successfulCreateClubResponseModel.getDescription());
             assertEquals(telegramChatLink, successfulCreateClubResponseModel.getTelegramChatLink());
-        });
+        }
 
-        step("Создание отзыва о клубе", () -> {
+        {
             CreateClubReviewRequestModel createClubReviewRequest = new CreateClubReviewRequestModel();
             createClubReviewRequest.setClub(clubId);
             createClubReviewRequest.setReview(reviewText);
             createClubReviewRequest.setAssessment(clubAssessment);
             createClubReviewRequest.setReadPages(readPages);
 
-            SuccessfulCreateReviewResponseModel successfulCreateReviewResponseModel = clubApiClient.successfulCreateReview(creatorAccessToken, createClubReviewRequest);
+            SuccessfulCreateReviewResponseModel successfulCreateReviewResponseModel = apiClient.club.successfulCreateReview(creatorAccessToken, createClubReviewRequest);
 
             reviewId = successfulCreateReviewResponseModel.getId();
-        });
+        }
 
-        step("Редактирование отзыва о клубе", () -> {
+        {
             UpdateReviewRequestModel updateReviewRequest = new UpdateReviewRequestModel();
             updateReviewRequest.setClub(clubId);
             updateReviewRequest.setReview(updatedReviewText);
             updateReviewRequest.setAssessment(updatedClubAssessment);
             updateReviewRequest.setReadPages(updatedReadPages);
 
-            SuccessfulUpdateReviewResponseModel successfulUpdateReviewResponseModel = clubApiClient.successfulUpdateReview(creatorAccessToken, reviewId, updateReviewRequest);
+            SuccessfulUpdateReviewResponseModel successfulUpdateReviewResponseModel = apiClient.club.successfulUpdateReview(creatorAccessToken, reviewId, updateReviewRequest);
 
             assertEquals(updatedClubAssessment, successfulUpdateReviewResponseModel.getAssessment());
             assertEquals(clubId, successfulUpdateReviewResponseModel.getClub());
             assertEquals(creatorUsername, successfulUpdateReviewResponseModel.getUser().getUsername());
             assertEquals(updatedReviewText, successfulUpdateReviewResponseModel.getReview());
             assertEquals(updatedReadPages, successfulUpdateReviewResponseModel.getReadPages());
-        });
+        }
     }
 
     @Tag("dz_19")
     @Test
     public void successfulDeleteClubReviewAsCreatorTest(){
-        step("Регистрация создателя клуба", () -> {
+        {
             RegistrationRequestModel registrationRequest = new RegistrationRequestModel();
             registrationRequest.setUsername(creatorUsername);
             registrationRequest.setPassword(password);
 
-            registrationApiClient.successfulRegistration(registrationRequest);
-        });
+            apiClient.registration.successfulRegistration(registrationRequest);
+        }
 
-        step("Получение токена созданного пользователя (создателя)", () -> {
+        {
             LoginRequestModel loginRequest = new LoginRequestModel();
             loginRequest.setUsername(creatorUsername);
             loginRequest.setPassword(password);
 
             SuccessfulLoginResponseModel successfulLoginResponseModel =
-                    loginApiClient.successfulLogin(loginRequest);
+                    apiClient.login.successfulLogin(loginRequest);
 
             creatorAccessToken = successfulLoginResponseModel.getAccess();
             creatorRefreshToken = successfulLoginResponseModel.getRefresh();
-        });
+        }
 
-        step("Создание книжного клуба", () -> {
+        {
             CreateClubRequestModel createClubRequest = new CreateClubRequestModel();
             createClubRequest.setBookTitle(bookTitle);
             createClubRequest.setBookAuthors(bookAuthors);
@@ -224,7 +222,7 @@ public class CRUDReviewFromApiTests extends BookClubTestBase {
             createClubRequest.setTelegramChatLink(telegramChatLink);
 
             SuccessfulCreateClubResponseModel successfulCreateClubResponseModel =
-                    clubApiClient.successfulCreateClub(creatorAccessToken, createClubRequest);
+                    apiClient.club.successfulCreateClub(creatorAccessToken, createClubRequest);
 
             clubId = successfulCreateClubResponseModel.getId();
 
@@ -233,48 +231,48 @@ public class CRUDReviewFromApiTests extends BookClubTestBase {
             assertEquals(publicationYear, successfulCreateClubResponseModel.getPublicationYear());
             assertEquals(description, successfulCreateClubResponseModel.getDescription());
             assertEquals(telegramChatLink, successfulCreateClubResponseModel.getTelegramChatLink());
-        });
+        }
 
-        step("Создание отзыва о клубе", () -> {
+        {
             CreateClubReviewRequestModel createClubReviewRequest = new CreateClubReviewRequestModel();
             createClubReviewRequest.setClub(clubId);
             createClubReviewRequest.setReview(reviewText);
             createClubReviewRequest.setAssessment(clubAssessment);
             createClubReviewRequest.setReadPages(readPages);
 
-            SuccessfulCreateReviewResponseModel successfulCreateReviewResponseModel = clubApiClient.successfulCreateReview(creatorAccessToken, createClubReviewRequest);
+            SuccessfulCreateReviewResponseModel successfulCreateReviewResponseModel = apiClient.club.successfulCreateReview(creatorAccessToken, createClubReviewRequest);
 
             reviewId = successfulCreateReviewResponseModel.getId();
-        });
+        }
 
-        step("Удаление отзыва о клубе", () ->
-                clubApiClient.SuccessfulDeleteReviewClub(creatorAccessToken, reviewId)
-        );
+        {
+            apiClient.club.SuccessfulDeleteReviewClub(creatorAccessToken, reviewId);
+        }
     }
 
     @Tag("dz_19")
     @Test
     public void deleteClubReviewAsParticipantTest(){
-        step("Регистрация создателя клуба и отзыва", () -> {
+        {
             RegistrationRequestModel registrationRequest = new RegistrationRequestModel();
             registrationRequest.setUsername(creatorUsername);
             registrationRequest.setPassword(password);
 
-            registrationApiClient.successfulRegistration(registrationRequest);
-        });
+            apiClient.registration.successfulRegistration(registrationRequest);
+        }
 
-        step("Получение токенов создателя", () -> {
+        {
             LoginRequestModel loginRequest = new LoginRequestModel();
             loginRequest.setUsername(creatorUsername);
             loginRequest.setPassword(password);
 
-            SuccessfulLoginResponseModel successfulLoginResponseModel = loginApiClient.successfulLogin(loginRequest);
+            SuccessfulLoginResponseModel successfulLoginResponseModel = apiClient.login.successfulLogin(loginRequest);
 
             creatorAccessToken = successfulLoginResponseModel.getAccess();
             creatorRefreshToken = successfulLoginResponseModel.getRefresh();
-        });
+        }
 
-        step("Создание книжного клуба", () -> {
+        {
             CreateClubRequestModel createClubRequest = new CreateClubRequestModel();
             createClubRequest.setBookTitle(bookTitle);
             createClubRequest.setBookAuthors(bookAuthors);
@@ -283,7 +281,7 @@ public class CRUDReviewFromApiTests extends BookClubTestBase {
             createClubRequest.setTelegramChatLink(telegramChatLink);
 
             SuccessfulCreateClubResponseModel successfulCreateClubResponseModel =
-                    clubApiClient.successfulCreateClub(creatorAccessToken, createClubRequest);
+                    apiClient.club.successfulCreateClub(creatorAccessToken, createClubRequest);
 
             clubId = successfulCreateClubResponseModel.getId();
 
@@ -292,43 +290,43 @@ public class CRUDReviewFromApiTests extends BookClubTestBase {
             assertEquals(publicationYear, successfulCreateClubResponseModel.getPublicationYear());
             assertEquals(description, successfulCreateClubResponseModel.getDescription());
             assertEquals(telegramChatLink, successfulCreateClubResponseModel.getTelegramChatLink());
-        });
+        }
 
-        step("Создание отзыва о клубе", () -> {
+        {
             CreateClubReviewRequestModel createClubReviewRequest = new CreateClubReviewRequestModel();
             createClubReviewRequest.setClub(clubId);
             createClubReviewRequest.setReview(reviewText);
             createClubReviewRequest.setAssessment(clubAssessment);
             createClubReviewRequest.setReadPages(readPages);
 
-            SuccessfulCreateReviewResponseModel successfulCreateReviewResponseModel = clubApiClient.successfulCreateReview(creatorAccessToken, createClubReviewRequest);
+            SuccessfulCreateReviewResponseModel successfulCreateReviewResponseModel = apiClient.club.successfulCreateReview(creatorAccessToken, createClubReviewRequest);
 
             reviewId = successfulCreateReviewResponseModel.getId();
-        });
+        }
 
-        step("Регистрация участника клуба", () -> {
+        {
             RegistrationRequestModel registrationRequest = new RegistrationRequestModel();
             registrationRequest.setUsername(participantUsername);
             registrationRequest.setPassword(password);
 
-            registrationApiClient.successfulRegistration(registrationRequest);
-        });
+            apiClient.registration.successfulRegistration(registrationRequest);
+        }
 
-        step("Получение токенов участника", () -> {
+        {
             LoginRequestModel loginRequest = new LoginRequestModel();
             loginRequest.setUsername(participantUsername);
             loginRequest.setPassword(password);
 
-            SuccessfulLoginResponseModel successfulLoginResponseModel = loginApiClient.successfulLogin(loginRequest);
+            SuccessfulLoginResponseModel successfulLoginResponseModel = apiClient.login.successfulLogin(loginRequest);
 
             participantAccessToken = successfulLoginResponseModel.getAccess();
             participantRefreshToken = successfulLoginResponseModel.getRefresh();
-        });
+        }
 
-        step("Удаление участником отзыва создателя", () -> {
-            InvalidDeleteReviewResponseModel invalidDeleteReviewResponse = clubApiClient.invalidDeleteReviewClub(participantAccessToken, reviewId);
+        {
+            InvalidDeleteReviewResponseModel invalidDeleteReviewResponse = apiClient.club.invalidDeleteReviewClub(participantAccessToken, reviewId);
 
             assertEquals("You do not have permission to perform this action.", invalidDeleteReviewResponse.getDetail());
-        });
+        }
     }
 }

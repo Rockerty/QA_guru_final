@@ -1,5 +1,6 @@
 package api.login;
 
+import io.qameta.allure.Step;
 import models.login.EmptyCredsLoginResponseModel;
 import models.login.IncorrectLoginResponseModel;
 import models.login.LoginRequestModel;
@@ -13,6 +14,7 @@ import static specs.login.LoginSpec.successfulLoginResponseSpec;
 
 public class LoginApiClient {
 
+    @Step("Успешная авторизация")
     public SuccessfulLoginResponseModel successfulLogin(LoginRequestModel loginRequestModel) {
         return given()
                 .spec(loginRequestSpec)
@@ -24,6 +26,7 @@ public class LoginApiClient {
                 .extract().as(SuccessfulLoginResponseModel.class);
     }
 
+    @Step("Авторизация: некорректный пароль")
     public IncorrectLoginResponseModel incorrectPasswordLogin(LoginRequestModel loginRequestModel) {
         return given()
                 .spec(loginRequestSpec)
@@ -35,6 +38,7 @@ public class LoginApiClient {
                 .extract().as(IncorrectLoginResponseModel.class);
     }
 
+    @Step("Авторизация: пустые имя и пароль")
     public EmptyCredsLoginResponseModel emptyCredsLogin(LoginRequestModel loginRequestModel) {
         return given()
                 .spec(loginRequestSpec)
