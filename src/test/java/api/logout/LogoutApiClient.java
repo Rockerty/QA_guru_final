@@ -1,6 +1,8 @@
 package api.logout;
 
+import io.qameta.allure.Step;
 import models.logout.IncorrectRefreshLogoutResponseModel;
+import models.logout.LogoutRequestModel;
 import models.logout.NoRefreshLogoutResponseModel;
 
 import static io.restassured.RestAssured.given;
@@ -9,20 +11,22 @@ import static specs.login.LogoutSpec.*;
 
 public class LogoutApiClient {
 
-    public void successfulLogout(String logoutBody) {
+    @Step("Успешный logout")
+    public void successfulLogout(LogoutRequestModel logoutRequestModel) {
         given()
                 .spec(defaultRequestSpec)
-                .body(logoutBody)
+                .body(logoutRequestModel)
                 .when()
                 .post("/auth/logout/")
                 .then()
                 .spec(successfulLogoutResponseSpec);
     }
 
-    public NoRefreshLogoutResponseModel noTokenLogout(String logoutBody) {
+    @Step("Logout: токен отсутствует")
+    public NoRefreshLogoutResponseModel noTokenLogout(LogoutRequestModel logoutRequestModel) {
         return given()
                 .spec(defaultRequestSpec)
-                .body(logoutBody)
+                .body(logoutRequestModel)
                 .when()
                 .post("/auth/logout/")
                 .then()
@@ -31,10 +35,11 @@ public class LogoutApiClient {
                 .as(NoRefreshLogoutResponseModel.class);
     }
 
-    public IncorrectRefreshLogoutResponseModel randomRefreshLogout(String logoutBody) {
+    @Step("Logout: случайный токен")
+    public IncorrectRefreshLogoutResponseModel randomRefreshLogout(LogoutRequestModel logoutRequestModel) {
         return given()
                 .spec(defaultRequestSpec)
-                .body(logoutBody)
+                .body(logoutRequestModel)
                 .when()
                 .post("/auth/logout/")
                 .then()

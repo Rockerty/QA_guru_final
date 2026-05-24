@@ -1,23 +1,17 @@
 package api.club;
 
-import models.club.CreateClubRequestModel;
-import models.club.GetClubResponseModel;
-import models.club.SuccessfulCreateClubResponseModel;
-import models.club.SuccessfulUpdateClubResponseModel;
-import models.club.UpdateClubRequestModel;
+import io.qameta.allure.Step;
+import models.club.*;
 
 import static io.restassured.RestAssured.given;
-import static specs.club.ClubSpec.clubRequestSpec;
-import static specs.club.ClubSpec.successfulCreateClubResponseSpec;
-import static specs.club.ClubSpec.successfulDeleteClubResponseSpec;
-import static specs.club.ClubSpec.successfulGetClubResponseSpec;
-import static specs.club.ClubSpec.successfulUpdateClubResponseSpec;
+import static specs.club.ClubSpec.*;
 
 public class ClubApiClient {
 
+    @Step("Создание книжного клуба")
     public SuccessfulCreateClubResponseModel successfulCreateClub(String accessToken, CreateClubRequestModel createClubRequestModel) {
         return given()
-                .spec(clubRequestSpec)
+                .spec(defaultRequestSpec)
                 .auth().oauth2(accessToken)
                 .body(createClubRequestModel)
                 .when()
@@ -28,9 +22,10 @@ public class ClubApiClient {
                 .as(SuccessfulCreateClubResponseModel.class);
     }
 
+    @Step("Получение книжного клуба")
     public GetClubResponseModel successfulGetClub(Integer clubId) {
         return given()
-                .spec(clubRequestSpec)
+                .spec(defaultRequestSpec)
                 .when()
                 .get("/clubs/" + clubId + "/")
                 .then()
@@ -39,9 +34,10 @@ public class ClubApiClient {
                 .as(GetClubResponseModel.class);
     }
 
+    @Step("Редактирование книжного клуба")
     public SuccessfulUpdateClubResponseModel successfulUpdateClub(String accessToken, Integer clubId, UpdateClubRequestModel updateClubRequestModel) {
         return given()
-                .spec(clubRequestSpec)
+                .spec(defaultRequestSpec)
                 .auth().oauth2(accessToken)
                 .body(updateClubRequestModel)
                 .when()
@@ -52,13 +48,89 @@ public class ClubApiClient {
                 .as(SuccessfulUpdateClubResponseModel.class);
     }
 
+    @Step("Удаление книжного клуба")
     public void successfulDeleteClub(String accessToken, Integer clubId) {
         given()
-                .spec(clubRequestSpec)
+                .spec(defaultRequestSpec)
                 .auth().oauth2(accessToken)
                 .when()
                 .delete("/clubs/" + clubId + "/")
                 .then()
                 .spec(successfulDeleteClubResponseSpec);
+    }
+
+    @Step("Вступление в книжный клуб")
+    public void successfulJoinClub(String accessToken, Integer clubId) {
+        given()
+                .spec(defaultRequestSpec)
+                .auth().oauth2(accessToken)
+                .when()
+                .post("/clubs/" + clubId + "/members/me/")
+                .then()
+                .spec(joinClubResponseSpecification);
+    }
+
+    @Step("Создание отзыва о клубе")
+    public SuccessfulCreateReviewResponseModel successfulCreateReview(String accessToken, CreateClubReviewRequestModel createClubReviewRequestModel) {
+        return given()
+                .spec(defaultRequestSpec)
+                .auth().oauth2(accessToken)
+                .body(createClubReviewRequestModel)
+                .when()
+                .post("/clubs/reviews/")
+                .then()
+                .spec(successfulCreateReviewResponseSpec)
+                .extract()
+                .as(SuccessfulCreateReviewResponseModel.class);
+    }
+
+    @Step("Чтение отзыва о клубе")
+    public GetReviewResponseModel successfulGetReview(Integer reviewId) {
+        return given()
+                .spec(defaultRequestSpec)
+                .when()
+                .get("/clubs/reviews/" + reviewId + "/")
+                .then()
+                .spec(successfulGetReviewResponseSpec)
+                .extract()
+                .as(GetReviewResponseModel.class);
+    }
+
+    @Step("Редактирование отзыва о клубе")
+    public SuccessfulUpdateReviewResponseModel successfulUpdateReview(String accessToken, Integer reviewId, UpdateReviewRequestModel updateReviewRequestModel) {
+        return given()
+                .spec(defaultRequestSpec)
+                .auth().oauth2(accessToken)
+                .body(updateReviewRequestModel)
+                .when()
+                .put("/clubs/reviews/" + reviewId + "/")
+                .then()
+                .spec(successfulGetReviewResponseSpec)
+                .extract()
+                .as(SuccessfulUpdateReviewResponseModel.class);
+    }
+
+    @Step("Удаление отзыва о клубе")
+    public void SuccessfulDeleteReviewClub(String accessToken, Integer reviewId) {
+        given()
+                .spec(defaultRequestSpec)
+                .auth().oauth2(accessToken)
+                .when()
+                .delete("/clubs/reviews/" + reviewId + "/")
+                .then()
+                .spec(successfulDeleteReviewResponseSpec);
+    }
+
+    @Step("Попытка удалить чужой отзыв о клубе")
+    public InvalidDeleteReviewResponseModel invalidDeleteReviewClub(String accessToken, Integer reviewId) {
+        return given()
+                .spec(defaultRequestSpec)
+                .auth().oauth2(accessToken)
+                .when()
+                .delete("/clubs/reviews/" + reviewId + "/")
+                .then()
+                .spec(invalidDeleteReviewResponseSpec)
+                .extract()
+                .as(InvalidDeleteReviewResponseModel.class);
     }
 }

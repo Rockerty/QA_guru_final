@@ -1,4 +1,4 @@
-package tests.bookclub;
+package tests.bookclub.api;
 
 import com.github.javafaker.Faker;
 import models.login.LoginRequestModel;
@@ -8,9 +8,10 @@ import models.update.InvalidEmailUpdateResponseModel;
 import models.update.SuccessfulUpdateResponseModel;
 import models.update.UpdateRequestModel;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import tests.bookclub.BookClubTestBase;
 
-import static io.qameta.allure.Allure.step;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class UpdateUserTests extends BookClubTestBase {
@@ -32,28 +33,30 @@ public class UpdateUserTests extends BookClubTestBase {
         email = faker.internet().emailAddress();
     }
 
+    @Tag("dz_19")
     @Test
     public void successfulUpdateUserTest(){
-        step("Регистрация нового пользователя", () -> {
+        {
             RegistrationRequestModel registrationRequestModel = new RegistrationRequestModel();
             registrationRequestModel.setUsername(username);
             registrationRequestModel.setPassword(password);
 
-            registrationApiClient.successfulRegistration(registrationRequestModel);
-        });
+            apiClient.registration.successfulRegistration(registrationRequestModel);
+        }
 
-        String accessToken = step("Получение токена созданного пользователя", () -> {
+        String accessToken;
+        {
             LoginRequestModel loginRequestModel = new LoginRequestModel();
             loginRequestModel.setUsername(username);
             loginRequestModel.setPassword(password);
 
             SuccessfulLoginResponseModel successfulLoginResponseModel =
-                    loginApiClient.successfulLogin(loginRequestModel);
+                    apiClient.login.successfulLogin(loginRequestModel);
 
-            return successfulLoginResponseModel.getAccess();
-        });
+            accessToken = successfulLoginResponseModel.getAccess();
+        }
 
-        step("Редактирование пользователя", () -> {
+        {
             UpdateRequestModel updateRequestModel = new UpdateRequestModel();
             updateRequestModel.setUsername(username);
             updateRequestModel.setFirstName(firstName);
@@ -61,39 +64,41 @@ public class UpdateUserTests extends BookClubTestBase {
             updateRequestModel.setEmail(email);
 
             SuccessfulUpdateResponseModel successfulUpdateResponseModel =
-                    updateUserApiClient.successfulUpdateUser(accessToken, updateRequestModel);
+                    apiClient.updateUser.successfulUpdateUser(accessToken, updateRequestModel);
 
             assertEquals(username, successfulUpdateResponseModel.getUsername());
             assertEquals(firstName, successfulUpdateResponseModel.getFirstName());
             assertEquals(lastName, successfulUpdateResponseModel.getLastName());
             assertEquals(email, successfulUpdateResponseModel.getEmail());
-        });
+        }
     }
 
+    @Tag("dz_19")
     @Test
     public void invalidEmailUpdateUserTest() {
         invalidEmail = "isNotEmail";
 
-        step("Регистрация нового пользователя", () -> {
+        {
             RegistrationRequestModel registrationRequestModel = new RegistrationRequestModel();
             registrationRequestModel.setUsername(username);
             registrationRequestModel.setPassword(password);
 
-            registrationApiClient.successfulRegistration(registrationRequestModel);
-        });
+            apiClient.registration.successfulRegistration(registrationRequestModel);
+        }
 
-        String accessToken = step("Получение токена созданного пользователя", () -> {
+        String accessToken;
+        {
             LoginRequestModel loginRequestModel = new LoginRequestModel();
             loginRequestModel.setUsername(username);
             loginRequestModel.setPassword(password);
 
             SuccessfulLoginResponseModel successfulLoginResponseModel =
-                    loginApiClient.successfulLogin(loginRequestModel);
+                    apiClient.login.successfulLogin(loginRequestModel);
 
-            return successfulLoginResponseModel.getAccess();
-        });
+            accessToken = successfulLoginResponseModel.getAccess();
+        }
 
-        step("Редактирование пользователя с некорректным email", () -> {
+        {
             UpdateRequestModel updateRequestModel = new UpdateRequestModel();
             updateRequestModel.setUsername(username);
             updateRequestModel.setFirstName(firstName);
@@ -101,36 +106,38 @@ public class UpdateUserTests extends BookClubTestBase {
             updateRequestModel.setEmail(invalidEmail);
 
             InvalidEmailUpdateResponseModel invalidEmailUpdateResponseModel =
-                    updateUserApiClient.invalidEmailUpdateUser(accessToken, updateRequestModel);
+                    apiClient.updateUser.invalidEmailUpdateUser(accessToken, updateRequestModel);
 
             String expectedError = "Enter a valid email address.";
 
             assertEquals(expectedError, invalidEmailUpdateResponseModel.getEmail().get(0));
-        });
+        }
     }
 
+    @Tag("dz_19")
     @Test
     public void nullEmailUpdateUserTest() {
-        step("Регистрация нового пользователя", () -> {
+        {
             RegistrationRequestModel registrationRequestModel = new RegistrationRequestModel();
             registrationRequestModel.setUsername(username);
             registrationRequestModel.setPassword(password);
 
-            registrationApiClient.successfulRegistration(registrationRequestModel);
-        });
+            apiClient.registration.successfulRegistration(registrationRequestModel);
+        }
 
-        String accessToken = step("Получение токена созданного пользователя", () -> {
+        String accessToken;
+        {
             LoginRequestModel loginRequestModel = new LoginRequestModel();
             loginRequestModel.setUsername(username);
             loginRequestModel.setPassword(password);
 
             SuccessfulLoginResponseModel successfulLoginResponseModel =
-                    loginApiClient.successfulLogin(loginRequestModel);
+                    apiClient.login.successfulLogin(loginRequestModel);
 
-            return successfulLoginResponseModel.getAccess();
-        });
+            accessToken = successfulLoginResponseModel.getAccess();
+        }
 
-        step("Редактирование пользователя с некорректным email", () -> {
+        {
             UpdateRequestModel updateRequestModel = new UpdateRequestModel();
             updateRequestModel.setUsername(username);
             updateRequestModel.setFirstName(firstName);
@@ -138,11 +145,11 @@ public class UpdateUserTests extends BookClubTestBase {
             updateRequestModel.setEmail(emptyEmail);
 
             InvalidEmailUpdateResponseModel invalidEmailUpdateResponseModel =
-                    updateUserApiClient.nullEmailUpdateUser(accessToken, updateRequestModel);
+                    apiClient.updateUser.nullEmailUpdateUser(accessToken, updateRequestModel);
 
             String expectedError = "This field may not be null.";
 
             assertEquals(expectedError, invalidEmailUpdateResponseModel.getEmail().get(0));
-        });
+        }
     }
 }
